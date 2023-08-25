@@ -1,0 +1,48 @@
+$font-family: 'Inter', Arial, Helvetica, sans-serif;
+$font-color: #118DFF;
+@mixin regularText {
+  font-family: $font-family;
+  font-style: normal;
+  font-weight: 400;
+}
+@mixin mediumText {
+  font-family: $font-family;
+  font-style: normal;
+  font-weight: 500;
+}
+@mixin semiBoldText {
+  font-family: $font-family;
+  font-style: normal;
+  font-weight: 600;
+}
+@mixin boldText {
+  font-family: $font-family;
+  font-style: normal;
+  font-weight: 700;
+}
+@mixin extraBoldText {
+  font-family: $font-family;
+  font-style: normal;
+  font-weight: 900;
+}
+
+@mixin hover {
+  opacity: 0.6;
+}
+
+@mixin maxWidthLarge {
+  max-width: 1440px;
+  
+}
+@mixin maxWidthMedium {
+  max-width: 1200px;
+  
+}
+@mixin maxWidthSmall {
+  max-width: 688px;
+  
+}
+@mixin maxWidthExtraSmall {
+  max-width: 280px;
+  
+}
