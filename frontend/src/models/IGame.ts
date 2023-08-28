@@ -1,7 +1,9 @@
+import { IUser } from './IUser';
+
 export interface IGame {
   _id: string;
   title: string;
-  gameMaster: GameMaster;
+  gameMaster: IUser;
   date: string;
   result: string;
   players: Player[];
@@ -9,14 +11,11 @@ export interface IGame {
 }
 
 export interface Player {
-  player: GameMaster;
+  player: IUser;
   role: string;
   modKill: boolean;
   bestPlayer: boolean;
   _id: string;
 }
 
-export interface GameMaster {
-  _id: string;
-  name: string;
-}
+

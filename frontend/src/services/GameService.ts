@@ -1,16 +1,22 @@
-import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/dist/query/react'
-import build from 'next/dist/build'
-import { IGame } from '@/models/IGame'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
+import build from 'next/dist/build';
+import { IGame } from '@/models/IGame';
 export const gameAPI = createApi({
-    reducerPath: 'gameApi',
-    baseQuery: fetchBaseQuery({baseUrl: 'http://localhost:3001'}),
-    endpoints: (build) => ({
-        fetchAllGames: build.query<IGame[], any>({
-            query: () => ({
-                url: '/games'
-                
-            })
-        })
-
-    })
-})
+  reducerPath: 'gameApi',
+  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001' }),
+  endpoints: (build) => ({
+    fetchAllGames: build.query<IGame[], any>({
+      query: () => ({
+        url: '/games',
+      }),
+    }),
+    createGame: build.mutation<IGame, IGame>({
+      query: (game) => ({
+        url: '/games',
+        method: 'POST',
+        body: game 
+        
+      }),
+    }),
+  }),
+});
