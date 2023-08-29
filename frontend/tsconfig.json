@@ -28,7 +28,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "src/components/RatingMain.tsx"
+    "src/components/RatingMain.tsx",
+    "src/utils/functions.js"
   ],
   "exclude": [
     "node_modules"

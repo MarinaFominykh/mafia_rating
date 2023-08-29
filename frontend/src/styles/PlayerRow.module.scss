@@ -1,0 +1,77 @@
+@import "./mixin.scss";
+
+.row {
+  border-radius: 8px;
+}
+.order {
+  max-width: 75px;
+}
+
+.name {
+  max-width: 252px;
+  text-align: left;
+  @include mediumText;
+  font-size: 15px;
+  line-height: 16px;
+  color: #2e3555;
+}
+
+.amount {
+  max-width: 118px;
+}
+.victory {
+  max-width: 48px;
+}
+
+.bestPlayer {
+  max-width: 105px;
+}
+
+.rating {
+  max-width: 60px;
+}
+.profile {
+  max-width: 118px;
+}
+
+.table_button {
+  width: 117px;
+  height: 32px;
+  background: #ebefff;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #118dff;
+  padding: 6px 0 6px 16px;
+  border: none;
+  background-image: url(../images/icons/ant-design_user_blue.svg);
+  background-repeat: no-repeat;
+  background-position: top 50% right 18px;
+  text-align: left;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+.table_button:hover {
+  @include hover;
+}
+
+@media screen and (max-width: 769px) {
+  .row:hover {
+    background-color: #f6f6f6;
+    cursor: pointer;
+  }
+  .profile {
+    display: none;
+  }
+}
+@media screen and (max-width: 540px) {
+  .amount{
+    display: none;
+  }
+  .victory{
+    display: none;
+  }
+  .bestPlayer{
+    display: none;
+  }
+  
+}

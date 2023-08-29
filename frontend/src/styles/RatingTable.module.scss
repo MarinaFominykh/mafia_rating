@@ -1,0 +1,79 @@
+@import './mixin.scss';
+
+.wrapper {
+  height: 621px;
+  overflow: auto;
+}
+
+.table {
+  border-spacing: 0;
+  border: none;
+  background: #ffffff;
+  padding: 24px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.head {
+  position: sticky;
+  top: 0;
+  background: #f9f9fa;
+}
+
+.cell {
+  @include regularText;
+  font-size: 15px;
+  line-height: 16px;
+  color: #2e3555;
+  text-align: center;
+  min-height: 30px;
+  border: none;
+  padding: 5px;
+}
+
+.cell_head {
+  font-size: 15px;
+  line-height: 16px;
+  color: #80858e;
+  border: none;
+  height: 64px;
+  @include mediumText;
+  cursor: pointer;
+}
+
+.name {
+  text-align: left;
+}
+
+@media screen and (max-width: 769px) {
+  .cell_head {
+    height: 56px;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .wrapper {
+    height: 100%;
+  }
+  .table {
+    padding: 0;
+  }
+
+  .head {
+    background: #f9f9fa;
+    border-radius: 8px;
+  }
+  .cell_head {
+    height: 32px;
+    font-size: 14px;
+    line-height: 16px;
+  }
+  .hidden {
+    display: none;
+  }
+  .rating{
+  margin: 0;
+  justify-content: center;
+}
+
+}

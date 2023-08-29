@@ -129,24 +129,24 @@
   background: url(../images/icons/fluent_city-16-filled.svg) no-repeat;
 }
 
-.button {
-  @include regularText;
-  font-size: 16px;
-  line-height: 40px;
-  color: #ffffff;
-  width: 145px;
-  padding: 0;
-  transition: 0.5s;
-  align-self: center;
-  cursor: pointer;
-  background: #118dff;
-  border-radius: 8px;
-  border: none;
-}
+// .button {
+//   @include regularText;
+//   font-size: 16px;
+//   line-height: 40px;
+//   color: #ffffff;
+//   width: 145px;
+//   padding: 0;
+//   transition: 0.5s;
+//   align-self: center;
+//   cursor: pointer;
+//   background: #118dff;
+//   border-radius: 8px;
+//   border: none;
+// }
 
-.button:hover {
-  @include hover;
-}
+// .button:hover {
+//   @include hover;
+// }
 
 .header_buttons {
   display: flex;
@@ -154,10 +154,6 @@
   align-items: center;
   gap: 25px;
 }
-
-
-
-
 
 .header__logout {
   @include mediumText;

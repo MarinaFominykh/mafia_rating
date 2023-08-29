@@ -78,7 +78,7 @@ function Header() {
         </div>
          <div className={styles.header_buttons}>
           {/* {loggedIn && <p onClick={handleSignOut} className="header__logout">Выйти</p>} */}
-          <button className={`${styles.button} ${styles.header__button}`}>
+          <button className={`button ${styles.header__button}`}>
             Новая игра &#43;
           </button>
         </div>

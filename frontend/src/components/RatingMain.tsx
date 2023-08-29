@@ -5,8 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { YEAR_OPTIONS } from '@/utils/constans';
 import { yearRating } from '@/store/selectPeriodReducer';
 import RatingTable from './RatingTable';
+import { filterResult } from '@/utils/functions';
+import { gameAPI } from '../services/GameService';
 
 const RatingMain = () => {
+   const { data: games } = gameAPI.useFetchAllGamesQuery('');
   const dispatch = useDispatch();
   // const period = useSelector((state: RootState) => state.selectPeriod.value);
   
@@ -18,7 +21,7 @@ const RatingMain = () => {
       <div className={styles.head}>
         <div className={styles.title_cont}>
           <h1 className={styles.title}>Рейтинг</h1>
-          <p className={styles.amount}>Количество игр:</p>
+          <p className={styles.amount}>Количество игр: {games?.length}</p>
         </div>
         <form className={styles.select_form}>
           <select
@@ -39,11 +42,11 @@ const RatingMain = () => {
       <div className={styles.count}>
         <p className={styles.count_text}>Город</p>
         <p className={styles.count_number}>
-          {/* {filterResult(matches, "Победа города")} */}
+          {filterResult(games, "Победа города")}
         </p>
         <p className={styles.count_separator}>:</p>
         <p className={styles.count_number}>
-          {/* {filterResult(matches, "Победа мафии")} */}
+          {filterResult(games, "Победа мафии")}
         </p>
         <p className={styles.count_text}>Мафия</p>
       </div>

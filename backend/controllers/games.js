@@ -79,7 +79,7 @@ const getGames = (req, res, next) => {
       select: 'name',
     })
     .populate({
-      path: 'players.player',
+      path: 'players.user',
       select: 'name',
     })
     .then((matches) => res.send(matches))

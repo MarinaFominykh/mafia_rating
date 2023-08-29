@@ -9,6 +9,7 @@ const GamesList = () => {
     isLoading,
     refetch,
   } = gameAPI.useFetchAllGamesQuery('');
+
   const [createGame, {}] = gameAPI.useCreateGameMutation();
   // const handlerCreate = async () => {
   //   const title = prompt();
