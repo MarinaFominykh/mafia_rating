@@ -6,6 +6,7 @@ const Games = () => {
   return (
     <section>
       <GamesList />
+      {/* <Slider /> */}
     </section>
   )
 }

@@ -1,12 +1,26 @@
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { Inter } from 'next/font/google';
 import styles from '@/styles/Home.module.scss';
 import RatingMain from '@/components/RatingMain';
+import AddPlayerForm from '@/components/AddPlayerForm';
+import AddGameForm from '@/components/AddGameForm';
+import { openPopup, closePopup } from '@/utils/functions';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
+  const [isAddPlayerPopupOpen, setIsAddPlayerPopupOpen] = useState(false);
+  
+
+  // function openPopup(setState: (value: boolean) => void) {
+  //   setState(true);
+  // }
+  // function closePopup() {
+  //   setIsAddPlayerPopupOpen(false);
+    
+  // }
   return (
     <>
       <Head>
@@ -16,7 +30,9 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <RatingMain />
+      <RatingMain handleAddPlayer={() => openPopup(setIsAddPlayerPopupOpen)} />
+      <AddPlayerForm isOpen={isAddPlayerPopupOpen} onClose={()=> closePopup(setIsAddPlayerPopupOpen)} />
+      
     </>
   );
 }

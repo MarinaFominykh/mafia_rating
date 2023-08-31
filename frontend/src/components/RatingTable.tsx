@@ -19,11 +19,11 @@ import {
 } from '../utils/functions';
 import { gameAPI } from '../services/GameService';
 
-interface RatingTablePropc {
-  // user: IUser;
+interface RatingTableProps {
+  handleAddPlayer: () => void;
 }
 
-const RatingTable: FC<RatingTablePropc> = () => {
+const RatingTable: FC<RatingTableProps> = ({handleAddPlayer}) => {
   let playerArray;
   const { data: games } = gameAPI.useFetchAllGamesQuery('');
   // UserService:
@@ -125,7 +125,7 @@ const RatingTable: FC<RatingTablePropc> = () => {
             <th
               className={`${styles.cell} ${styles.cell_head} ${styles.hidden}`}
             >
-              <button onClick={handleCreate} className='button'>
+              <button onClick={handleAddPlayer} className='button'>
                 Новый игрок +
               </button>
             </th>

@@ -1,0 +1,26 @@
+@import './mixin.scss';
+
+.popup {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(2, 47, 88, 0.25);
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.5s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.popup_opened {
+  visibility: visible;
+  opacity: 1;
+  transition: 0.5s;
+  pointer-events: auto;
+  overflow-y: auto;
+  z-index: 2;
+}

@@ -1,0 +1,71 @@
+@import './mixin.scss';
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 668px;
+  background: #ffffff;
+  padding: 24px;
+  box-sizing: border-box;
+  position: absolute;
+  gap: 24px;
+  min-height: 581px;
+  border-radius: 16px;
+}
+
+.fieldset {
+  border: none;
+}
+
+.title_wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px; 
+}
+
+.close {
+  width: 24px;
+  height: 24px;
+  background: transparent url(../images/icons/close.svg);
+  // position: absolute;
+  // top: 28px;
+  // right: 24px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: 0.5s;
+  object-fit: contain;
+  object-position: center;
+}
+
+.close:hover {
+  opacity: 0.6;
+}
+
+.submit {
+  @include regularText;
+  font-size: 16px;
+  line-height: 20px;
+  border-radius: 8px;
+  padding: 10px 16px;
+  border: none;
+  cursor: pointer;
+  transition: 0.5s;
+  background: #118dff;
+  color: #ffffff;
+  width: fit-content;
+}
+
+.submit:hover {
+  @include hover;
+}
+
+.submit:disabled {
+  background-color: rgb(180, 191, 191);
+  cursor: default;
+}
+
+.submit:disabled:hover {
+  opacity: 1;
+}

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, {FC, useState} from 'react';
 import Link from 'next/link';
 import styles from '@/styles/Header.module.scss';
 import { checkbox } from "../store/actions";
 import { useDispatch, useSelector } from "react-redux";
+import AddGameForm from './AddGameForm';
+import { openPopup, closePopup } from '@/utils/functions';
 
 // interface CheckboxState {
 //   value: boolean;
@@ -16,7 +18,11 @@ import { useDispatch, useSelector } from "react-redux";
 //   type: string;
 //   payload: boolean;
 // }
-function Header() {
+interface HeaderProps {
+  handleAddGame: () => void;
+}
+const Header: FC<HeaderProps> = ({handleAddGame}) => {
+  const [isAddGamePopupOpen, setIsAddGamePopupOpen] = useState(false);
 //   const dispatch = useDispatch();
 //  const checked = useSelector((state: RootState) => {
 //   const { checkboxReducer } = state;
@@ -34,7 +40,8 @@ function Header() {
 
   // const className = checked ? "header__burger-input" : "";
   return (
-    <header className={styles.header}>
+    <>
+     <header className={styles.header}>
       <div className={styles.header__container}>
         <div className={styles.header__navcontainer}>
           <div className={styles.header__logocontainer}>
@@ -78,12 +85,15 @@ function Header() {
         </div>
          <div className={styles.header_buttons}>
           {/* {loggedIn && <p onClick={handleSignOut} className="header__logout">Выйти</p>} */}
-          <button className={`button ${styles.header__button}`}>
+          <button className={`button ${styles.header__button}`} onClick={() => openPopup(setIsAddGamePopupOpen)}>
             Новая игра &#43;
           </button>
         </div>
       </div>
     </header>
+    <AddGameForm isOpen={isAddGamePopupOpen} onClose={()=> closePopup(setIsAddGamePopupOpen)} />
+    </>
+   
   );
 }
 

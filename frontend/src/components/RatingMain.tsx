@@ -1,4 +1,4 @@
-import React, {ChangeEvent} from 'react';
+import React, {ChangeEvent, FC} from 'react';
 import styles from '@/styles/RatingMain.module.scss';
 import type { RootState } from  '../store';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,7 +8,10 @@ import RatingTable from './RatingTable';
 import { filterResult } from '@/utils/functions';
 import { gameAPI } from '../services/GameService';
 
-const RatingMain = () => {
+interface RatingMainProps {
+  handleAddPlayer: () => void;
+}
+const RatingMain: FC <RatingMainProps> = ({handleAddPlayer}) => {
    const { data: games } = gameAPI.useFetchAllGamesQuery('');
   const dispatch = useDispatch();
   // const period = useSelector((state: RootState) => state.selectPeriod.value);
@@ -50,7 +53,7 @@ const RatingMain = () => {
         </p>
         <p className={styles.count_text}>Мафия</p>
       </div>
-      <RatingTable />
+      <RatingTable handleAddPlayer={handleAddPlayer}/>
     </section>
   );
 };

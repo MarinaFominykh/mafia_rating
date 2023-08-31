@@ -1,0 +1,16 @@
+@import './mixin.scss';
+
+.error {
+  @include regularText;
+  font-size: 12px;
+  line-height: 16px;
+  color: red;
+  height: 18px;
+  margin-bottom: 5px;
+}
+@media screen and (max-width: 540px) {
+  .error {
+    line-height: 12px;
+    height: 13px;
+  }
+}

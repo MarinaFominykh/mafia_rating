@@ -96,8 +96,16 @@ export const rating = (games, user) => {
   return rating;
 };
 
-  export function filterResult(games, result) {
-    return games?.filter((game) => {
-      return game.result === result;
-    }).length;
-   }
+export function filterResult(games, result) {
+  return games?.filter((game) => {
+    return game.result === result;
+  }).length;
+}
+
+export function openPopup(setState) {
+  setState(true);
+}
+
+export function closePopup(setState) {
+  setState(false);
+}

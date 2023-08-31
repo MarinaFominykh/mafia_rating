@@ -1,0 +1,41 @@
+@import './mixin.scss';
+
+.form {
+  display: flex;
+  flex-direction: column;
+  
+  width: 668px;
+  background: #ffffff;
+  padding: 24px;
+  box-sizing: border-box;
+  position: absolute;
+  
+  min-height: 581px;
+  border-radius: 16px;
+}
+
+.title_wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px; 
+}
+
+.close {
+  width: 24px;
+  height: 24px;
+  background: transparent url(../images/icons/close.svg);
+  // position: absolute;
+  // top: 28px;
+  // right: 24px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: 0.5s;
+  object-fit: contain;
+  object-position: center;
+}
+
+.close:hover {
+  opacity: 0.6;
+}
