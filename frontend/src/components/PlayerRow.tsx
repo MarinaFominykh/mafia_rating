@@ -40,9 +40,9 @@ const PlayerRow: FC<PlayerRowProps> = ({ player, remove, edit }) => {
       <td className={`${stylesTable.cell} ${styles.order}`}></td>
       <td className={`${stylesTable.cell} ${styles.name}`}>{player.name}</td>
       <td className={`${stylesTable.cell} ${styles.amount}`}>{player.games}</td>
-      <td className={`${stylesTable.cell} ${styles.victory}`}>{player.wins}</td>
-      <td className={`${stylesTable.cell} ${styles.bestPlayer}`}>{player.best}</td>
-      <td className={`${stylesTable.cell} ${styles.rating}`}>{player.rating}</td>
+      <td className={`${stylesTable.cell} ${styles.victory}`}>{player?.wins?.toString()}</td>
+      <td className={`${stylesTable.cell} ${styles.bestPlayer}`}>{player?.best?.toString()}</td>
+      <td className={`${stylesTable.cell} ${styles.rating}`}>{player?.rating?.toString()}</td>
       <td className={`${stylesTable.cell} ${styles.profile}`}>
         {' '}
         {/* <button className="table__profile-btn" onClick={handleUpdateUnith}> */}

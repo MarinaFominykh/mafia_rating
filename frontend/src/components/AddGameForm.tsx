@@ -1,7 +1,10 @@
-import React, { FC, FormEvent } from 'react';
+import React, { FC, FormEvent, ChangeEvent, useState, useEffect} from 'react';
 import styles from '@/styles/AddGameForm.module.scss';
 import Popup from './Popup';
 import Slider from './Slider';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
+import { gameFormSlice } from '@/store/reducers/GameFormSlice';
+
 
 interface AddGameFormProps {
   isOpen: boolean;
@@ -9,9 +12,53 @@ interface AddGameFormProps {
 }
 
 const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
+   const dispatch = useAppDispatch();
+  const {title, gameMaster, date, result, players} = useAppSelector((state) => state.GameFormReducer);
+  const [formValues, setFormValues] = useState({
+    title: '',
+    gameMaster: '',
+    result: '',
+    date: '',
+    mafia: '',
+    done: '',
+    sheriff: '',
+    peace: '',
+    bestPlayer: '',
+    modKill: '',
+  });
+
+  const handleInputChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = event.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
+
+  // useEffect(() => {
+  //   dispatch(gameFormSlice.actions.createGame())
+  // })
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('add game submit=>', e);
+    const players = [
+      { user: formValues.mafia, role: 'мафия' },
+      { user: formValues.done, role: 'дон' },
+      { user: formValues.sheriff, role: 'шериф' },
+      { user: formValues.peace, role: 'мирный' },
+    ];
+
+    const data = {
+      title: formValues.title,
+      gameMaster: formValues.gameMaster,
+      date: formValues.date,
+      result: formValues.result,
+      //   players: [
+      // {user:
+      //   role:
+      //   modKill:
+      //   bestPlayer: }
+      //   ]
+    };
+    console.log('players=>', players);
   };
   return (
     <Popup isOpen={isOpen}>
@@ -24,8 +71,7 @@ const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
             onClick={onClose}
           ></button>
         </div>
-        <Slider />
-        
+        <Slider onInputChange={handleInputChange} />
       </form>
     </Popup>
   );

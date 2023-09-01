@@ -7,15 +7,15 @@ export interface IGame {
   date: string;
   result: string;
   players: Player[];
-  __v: number;
+ 
 }
 
 export interface Player {
   user: IUser;
   role: string;
-  modKill: boolean;
-  bestPlayer: boolean;
-  _id: string;
+  modKill?: boolean;
+  bestPlayer?: boolean;
+ 
 }
 
 

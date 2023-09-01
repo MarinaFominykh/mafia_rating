@@ -2,13 +2,15 @@ import {combineReducers, configureStore, getDefaultMiddleware} from '@reduxjs/to
 import selectYearRatingReducer from './selectPeriodReducer';
 import playersReducer from './playersReducer';
 import userReducer from './reducers/UserSlice';
-import playerReducer from './reducers/PlayerSlice'
+import playerReducer from './reducers/PlayerSlice';
+import GameFormReducer from './reducers/GameFormSlice';
 import { gameAPI } from '@/services/GameService';
 import {userAPI} from '@/services/UserService';
 export const rootReducer = combineReducers({
 
    // userReducer,
    playerReducer,
+   GameFormReducer,
    [gameAPI.reducerPath]: gameAPI.reducer,
    [userAPI.reducerPath]: userAPI.reducer,
  });

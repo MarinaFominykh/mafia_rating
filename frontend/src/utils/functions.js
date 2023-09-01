@@ -109,3 +109,12 @@ export function openPopup(setState) {
 export function closePopup(setState) {
   setState(false);
 }
+
+export const optionsUser = (users) => {
+    return users?.map((user) => {
+        return {
+            value: user._id,
+            label: user.name
+        };
+    });
+}

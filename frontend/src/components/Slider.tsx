@@ -1,32 +1,26 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC, ReactNode, ChangeEvent, FormEvent, useState } from 'react';
 import styles from '@/styles/Slider.module.scss';
-import dynamic from 'next/dynamic';
+import Select from 'react-select';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, EffectCube } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import 'swiper/css/scrollbar';
+import { userAPI } from '@/services/UserService';
+import { optionsUser } from '../utils/functions';
+import { optionsResult } from '@/utils/constans';
 import InfoTooltip from './InfoTooltip';
 
-// interface SwiperSlideWithFormProps {
-//   children: React.ReactNode;
-// }
-
-// const SwiperSlideWithForm: FC<SwiperSlideWithFormProps> = ({ children }) => {
-//   return (
-//     <SwiperSlide>
-//       <form>{children}</form>
-//     </SwiperSlide>
-//   );
-// };
-
-const Slider = () => {
+interface SliderProps {
+  onInputChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
+}
+const Slider: FC<SliderProps> = ({ onInputChange }) => {
+  const [value, setValue] = useState('');
   const pagination = {
     clickable: true,
-
     renderBullet: function (index: number, className: string) {
-      // return '<span class="' + className + '">' + (index + 1) + '</span>';
       return (
         '<div class="' +
         className +
@@ -34,14 +28,7 @@ const Slider = () => {
         (index + 1) +
         '</span><p class="bullet_text"></p></div>'
       );
-      // return `<div class=${styles.bullet_wrapper}>
-      //     <span></span>
-      //     <p></p>
-      //   </div>`
     },
-
-    // modifierClass: `sdfsdkfjsdfj-`,
-
     bulletClass: `swiper-pagination-bullet ${styles.bullet_form}`,
   };
 
@@ -50,6 +37,18 @@ const Slider = () => {
     nextEl: '.next',
     prevEl: '.prev',
   };
+
+  const {
+    data: users,
+    error,
+    isLoading,
+    isSuccess,
+  } = userAPI.useFetchAllUsersQuery('');
+
+  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setValue(e.target.value);
+  };
+
   return (
     <>
       <Swiper
@@ -59,11 +58,10 @@ const Slider = () => {
         slidesPerView={1}
         navigation={navigation}
         pagination={pagination}
-        onSwiper={(swiper) => console.log(swiper)}
-        onSlideChange={() => console.log('slide change')}
+        // onSwiper={(swiper) => console.log(swiper)}
+        // onSlideChange={() => console.log('slide change')}
         className={styles.swiper_form}
         speed={1000}
-        
       >
         <SwiperSlide>
           <fieldset className={`fieldset ${styles.fields}`}>
@@ -72,186 +70,210 @@ const Slider = () => {
             </label>
             <input
               id='titleAddGame'
-              name='titleAddGame'
+              name='title'
               className={`input ${styles.input}`}
               type='text'
-              placeholder='Введите название игры'
+              onChange={onInputChange}
               required
             />
             <InfoTooltip error='Error' />
             <label className={`label ${styles.label}`} htmlFor='gmAddGame'>
               Выберите ведущего
             </label>
-            <input
-              id='titleAddGame'
-              name='titleAddGame'
+            <select
+              id='gmAddGame'
+              name='gameMaster'
               className={`input ${styles.input}`}
-              type='text'
-              placeholder='Введите название игры'
+              placeholder='Выберите ведущего'
               required
-            />
+              onChange={onInputChange}
+            >
+              <option></option>
+              {users?.map((user) => {
+                return (
+                  <option key={user._id} value={user._id}>
+                    {user.name}
+                  </option>
+                );
+              })}
+            </select>
             <InfoTooltip error='Error' />
           </fieldset>
           <fieldset className={`fieldset ${styles.fields_horizontal}`}>
             <label
               className={`label ${styles.label} ${styles.label_horizontal}`}
-              htmlFor='gmAddGame'
+              htmlFor='dateAddGame'
             >
               Дата окончания игры
               <input
-                id='titleAddGame'
-                name='titleAddGame'
+                id='dateAddGame'
+                name='date'
                 className={`input ${styles.input_horizontal}`}
-                type='text'
-                placeholder='Введите название игры'
+                type='date'
                 required
+                onChange={onInputChange}
               />
               <InfoTooltip error='Error' />
             </label>
 
             <label
               className={`label ${styles.label} ${styles.label_horizontal}`}
-              htmlFor='gmAddGame'
+              htmlFor='resultAddGame'
             >
               Результат игры
-              <input
-                id='titleAddGame'
-                name='titleAddGame'
+              <select
+                id='resultAddGame'
+                name='result'
                 className={`input ${styles.input_horizontal}`}
-                type='text'
-                placeholder='Введите название игры'
                 required
-              />
+                onChange={onInputChange}
+              >
+                <option></option>
+                <option value='Победа города'>Победа города</option>
+                <option value='Победа мафии'>Победа мафии</option>
+                <option value='Ничья'>Ничья</option>
+              </select>
               <InfoTooltip error='Error' />
             </label>
           </fieldset>
         </SwiperSlide>
         <SwiperSlide>
           <fieldset className={`fieldset ${styles.fields}`}>
-            <label className={`label ${styles.label}`} htmlFor='titleAddGame'>
-              Название игры
+            <label className={`label ${styles.label}`} htmlFor='mafiaAddGame'>
+              Мафия
             </label>
-            <input
-              id='titleAddGame'
-              name='titleAddGame'
+            <select
+              id='mafiaAddGame'
+              name='mafia'
               className={`input ${styles.input}`}
-              type='text'
-              placeholder='Введите название игры'
               required
-            />
+              onChange={onInputChange}
+            >
+              <option></option>
+              {users?.map((user) => {
+                return (
+                  <option key={user._id} value={user._id}>
+                    {user.name}
+                  </option>
+                );
+              })}
+            </select>
             <InfoTooltip error='Error' />
-            <label className={`label ${styles.label}`} htmlFor='gmAddGame'>
-              Выберите ведущего
+            <label className={`label ${styles.label}`} htmlFor='doneAddGame'>
+              Дон
             </label>
-            <input
-              id='titleAddGame'
-              name='titleAddGame'
+            <select
+              id='doneAddGame'
+              name='done'
               className={`input ${styles.input}`}
-              type='text'
-              placeholder='Введите название игры'
               required
-            />
+              onChange={onInputChange}
+            >
+              <option></option>
+              {users?.map((user) => {
+                return (
+                  <option key={user._id} value={user._id}>
+                    {user.name}
+                  </option>
+                );
+              })}
+            </select>
             <InfoTooltip error='Error' />
-          </fieldset>
-          <fieldset className={`fieldset ${styles.fields_horizontal}`}>
-            <label
-              className={`label ${styles.label} ${styles.label_horizontal}`}
-              htmlFor='gmAddGame'
-            >
-              Дата окончания игры
-              <input
-                id='titleAddGame'
-                name='titleAddGame'
-                className={`input ${styles.input_horizontal}`}
-                type='text'
-                placeholder='Введите название игры'
-                required
-              />
-              <InfoTooltip error='Error' />
+            <label className={`label ${styles.label}`} htmlFor='sheriffAddGame'>
+              Шериф
             </label>
-
-            <label
-              className={`label ${styles.label} ${styles.label_horizontal}`}
-              htmlFor='gmAddGame'
+            <select
+              id='sheriffAddGame'
+              name='sheriff'
+              className={`input ${styles.input}`}
+              required
+              onChange={onInputChange}
             >
-              Результат игры
-              <input
-                id='titleAddGame'
-                name='titleAddGame'
-                className={`input ${styles.input_horizontal}`}
-                type='text'
-                placeholder='Введите название игры'
-                required
-              />
-              <InfoTooltip error='Error' />
+              <option></option>
+              {users?.map((user) => {
+                return (
+                  <option key={user._id} value={user._id}>
+                    {user.name}
+                  </option>
+                );
+              })}
+            </select>
+            <InfoTooltip error='Error' />
+            <label className={`label ${styles.label}`} htmlFor='peaceAddGame'>
+              Мирные жители
             </label>
+            <select
+              id='peaceAddGame'
+              name='peace'
+              className={`input ${styles.input}`}
+              required
+              onChange={onInputChange}
+            >
+              <option></option>
+              {users?.map((user) => {
+                return (
+                  <option key={user._id} value={user._id}>
+                    {user.name}
+                  </option>
+                );
+              })}
+            </select>
+            <InfoTooltip error='Error' />
           </fieldset>
         </SwiperSlide>
         <SwiperSlide>
           <fieldset className={`fieldset ${styles.fields}`}>
-            <label className={`label ${styles.label}`} htmlFor='titleAddGame'>
-              Название игры
+              <label className={`label ${styles.label}`} htmlFor='bpAddGame'>
+              Лучший игрок
             </label>
-            <input
-              id='titleAddGame'
-              name='titleAddGame'
+            <select
+              id='bpAddGame'
+              name='bestPlayer'
               className={`input ${styles.input}`}
-              type='text'
-              placeholder='Введите название игры'
               required
-            />
+              onChange={onInputChange}
+            >
+              <option></option>
+              {users?.map((user) => {
+                return (
+                  <option key={user._id} value={user._id}>
+                    {user.name}
+                  </option>
+                );
+              })}
+            </select>
             <InfoTooltip error='Error' />
-            <label className={`label ${styles.label}`} htmlFor='gmAddGame'>
-              Выберите ведущего
+              <label className={`label ${styles.label}`} htmlFor='mkAddGame'>
+              МК
             </label>
-            <input
-              id='titleAddGame'
-              name='titleAddGame'
+            <select
+              id='mkAddGame'
+              name='modKill'
               className={`input ${styles.input}`}
-              type='text'
-              placeholder='Введите название игры'
               required
-            />
+              onChange={onInputChange}
+            >
+              <option></option>
+              {users?.map((user) => {
+                return (
+                  <option key={user._id} value={user._id}>
+                    {user.name}
+                  </option>
+                );
+              })}
+            </select>
             <InfoTooltip error='Error' />
+        
           </fieldset>
-          <fieldset className={`fieldset ${styles.fields_horizontal}`}>
-            <label
-              className={`label ${styles.label} ${styles.label_horizontal}`}
-              htmlFor='gmAddGame'
-            >
-              Дата окончания игры
-              <input
-                id='titleAddGame'
-                name='titleAddGame'
-                className={`input ${styles.input_horizontal}`}
-                type='text'
-                placeholder='Введите название игры'
-                required
-              />
-              <InfoTooltip error='Error' />
-            </label>
-
-            <label
-              className={`label ${styles.label} ${styles.label_horizontal}`}
-              htmlFor='gmAddGame'
-            >
-              Результат игры
-              <input
-                id='titleAddGame'
-                name='titleAddGame'
-                className={`input ${styles.input_horizontal}`}
-                type='text'
-                placeholder='Введите название игры'
-                required
-              />
-              <InfoTooltip error='Error' />
-            </label>
-          </fieldset>
+      
         </SwiperSlide>
       </Swiper>
       <div className={styles.buttons}>
         <button type='button' className={`prev button ${styles.prev_button}`}>
           Назад
+        </button>
+        <button type='submit' className='button'>
+          Сохранить
         </button>
         <button type='button' className={`next button ${styles.next_button}`}>
           Далее

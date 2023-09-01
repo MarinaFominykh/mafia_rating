@@ -11,3 +11,17 @@ export const BLACK = "мафия";
 export const RED = "мирный";
 export const BEST_PLAYER = "bestPlayer";
 export const MODKILL = "modKill";
+
+export const optionsResult = [{
+        value: 'Победа города',
+        label: 'Победа города'
+    },
+    {
+        value: 'Победа мафии',
+        label: 'Победа мафии'
+    },
+    {
+        value: 'Ничья',
+        label: 'Ничья'
+    }
+]
