@@ -15,8 +15,9 @@ interface SliderProps {
   onInputChange: (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
+
 }
-const Slider: FC<SliderProps> = ({ onInputChange }) => {
+const Slider: FC<SliderProps> = ({ onInputChange}) => {
   const [value, setValue] = useState('');
   const pagination = {
     clickable: true,
@@ -74,7 +75,7 @@ const Slider: FC<SliderProps> = ({ onInputChange }) => {
               className={`input ${styles.input}`}
               type='text'
               onChange={onInputChange}
-              required
+              // required
             />
             <InfoTooltip error='Error' />
             <label className={`label ${styles.label}`} htmlFor='gmAddGame'>
@@ -85,7 +86,7 @@ const Slider: FC<SliderProps> = ({ onInputChange }) => {
               name='gameMaster'
               className={`input ${styles.input}`}
               placeholder='Выберите ведущего'
-              required
+              // required
               onChange={onInputChange}
             >
               <option></option>
@@ -110,7 +111,7 @@ const Slider: FC<SliderProps> = ({ onInputChange }) => {
                 name='date'
                 className={`input ${styles.input_horizontal}`}
                 type='date'
-                required
+                // required
                 onChange={onInputChange}
               />
               <InfoTooltip error='Error' />
@@ -125,7 +126,7 @@ const Slider: FC<SliderProps> = ({ onInputChange }) => {
                 id='resultAddGame'
                 name='result'
                 className={`input ${styles.input_horizontal}`}
-                required
+                // required
                 onChange={onInputChange}
               >
                 <option></option>
@@ -146,7 +147,9 @@ const Slider: FC<SliderProps> = ({ onInputChange }) => {
               id='mafiaAddGame'
               name='mafia'
               className={`input ${styles.input}`}
-              required
+            
+              // required
+              // onChange={onInputChange}
               onChange={onInputChange}
             >
               <option></option>
@@ -166,7 +169,7 @@ const Slider: FC<SliderProps> = ({ onInputChange }) => {
               id='doneAddGame'
               name='done'
               className={`input ${styles.input}`}
-              required
+              // required
               onChange={onInputChange}
             >
               <option></option>
@@ -186,7 +189,7 @@ const Slider: FC<SliderProps> = ({ onInputChange }) => {
               id='sheriffAddGame'
               name='sheriff'
               className={`input ${styles.input}`}
-              required
+              // required
               onChange={onInputChange}
             >
               <option></option>
@@ -206,7 +209,7 @@ const Slider: FC<SliderProps> = ({ onInputChange }) => {
               id='peaceAddGame'
               name='peace'
               className={`input ${styles.input}`}
-              required
+              // required
               onChange={onInputChange}
             >
               <option></option>
@@ -230,7 +233,7 @@ const Slider: FC<SliderProps> = ({ onInputChange }) => {
               id='bpAddGame'
               name='bestPlayer'
               className={`input ${styles.input}`}
-              required
+              // required
               onChange={onInputChange}
             >
               <option></option>
@@ -250,7 +253,7 @@ const Slider: FC<SliderProps> = ({ onInputChange }) => {
               id='mkAddGame'
               name='modKill'
               className={`input ${styles.input}`}
-              required
+              // required
               onChange={onInputChange}
             >
               <option></option>
