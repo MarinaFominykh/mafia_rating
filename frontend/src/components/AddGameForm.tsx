@@ -6,12 +6,25 @@ import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import { gameAPI } from '@/services/GameService';
 import { IUser } from '@/models/IUser';
 import { IGame } from '@/models/IGame';
-
+import { getData } from '../store/reducers/DataFormSlice';
+import { gameFormSlice } from '../store/reducers/DataFormSlice';
+import {
+  RED_RESULT,
+  BLACK_RESULT,
+  EQUALITY_RESULT,
+  SHERIFF,
+  DONE,
+  BLACK,
+  RED,
+  BEST_PLAYER,
+  MODKILL,
+} from '@/utils/constans';
 interface AddGameFormProps {
   isOpen: boolean;
   onClose: () => void;
 }
-interface FormValues {
+export interface FormValues {
+  // [key: string]: any;
   title: string;
   gameMaster: string;
   result: string;
@@ -25,11 +38,12 @@ interface FormValues {
 }
 
 const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
-  const [mafia, setMafia] = useState<string[]>([]);
-
+  let mafia: string[] = [];
   const [createGame] = gameAPI.useCreateGameMutation();
-  //  const dispatch = useAppDispatch();
-  // const {title, gameMaster, date, result, players} = useAppSelector((state) => state.GameFormReducer);
+  const dispatch = useAppDispatch();
+  const { title, gameMaster, date, result, players } = useAppSelector(
+    (state) => state.dataFormSlice
+  );
   const [formValues, setFormValues] = useState<FormValues>({
     title: '',
     gameMaster: '',
@@ -47,134 +61,132 @@ const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = event.target;
-    if (name === 'mafia' || name === 'peace' || name === 'bestPlayer' || name === 'modKill') {
-    setFormValues({ ...formValues, [name]: [...formValues[name], value] });
-  }  else {
+    if (
+      name === 'mafia' ||
+      name === 'peace' ||
+      name === 'bestPlayer' ||
+      name === 'modKill'
+    ) {
+      setFormValues({ ...formValues, [name]: [...formValues[name], value] });
+    } else {
       setFormValues({ ...formValues, [name]: value });
     }
   };
 
-   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleRemove = (id: string, field: string) => {
+    if (
+      field === 'mafia' ||
+      field === 'peace' ||
+      field === 'bestPlayer' ||
+      field === 'modKill'
+    ) {
+      setFormValues({
+        ...formValues,
+        [field]: formValues[field].filter((playerId: string) => {
+          return playerId !== id;
+        }),
+      });
+    } else {
+      setFormValues({ ...formValues, [field]: '' });
+    }
+  };
+
+  // const handleInputChange = (
+  //   event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  // ) => {
+  //   const { name, value } = event.target;
+  //   dispatch(
+  //       getData({
+  //         title: value,
+  //         gameMaster: value,
+  //         date: value,
+  //         result: value,
+  //         players: [],
+  //       })
+  //     );
+  // };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    const {
+      title,
+      gameMaster,
+      date,
+      result,
+      done,
+      sheriff,
+      mafia,
+      peace,
+      bestPlayer,
+      modKill,
+    } = formValues;
     const newGame = {
-      _id: '12346',
-      title: 'New',
-      gameMaster: '64e2fde5da28496ed82cc274',
-      date: '2020-04-21T00:00:00.000+00:00',
-      result: 'Победа города',
+      title,
+      gameMaster,
+      date,
+      result,
       players: [
         {
-          user: '64e2fde5da28496ed82cc2a5',
-          role: 'шериф',
+          user: sheriff,
+          role: SHERIFF,
+          bestPlayer: bestPlayer.some((bp) => {
+            return bp === sheriff;
+          }),
+          modKill: modKill.some((mk) => {
+            return mk === sheriff;
+          }),
         },
         {
-          user: '64e2fde5da28496ed82cc2a5',
-          role: 'дон',
+          user: done,
+          role: DONE,
+          bestPlayer: bestPlayer.some((bp) => {
+            return bp === done;
+          }),
+          modKill: modKill.some((mk) => {
+            return mk === done;
+          }),
         },
-        {
-          user: '64e2fde5da28496ed82cc2a5',
-          role: 'мафия',
-        },
-        {
-          user: '64e2fde5da28496ed82cc2a5',
-          role: 'мафия',
-        },
-        {
-          user: '64e2fde5da28496ed82cc2a5',
-          role: 'мирный',
-        },
-        {
-          user: '64e2fde5da28496ed82cc2a5',
-          role: 'мирный',
-        },
-        {
-          user: '64e2fde5da28496ed82cc2a5',
-          role: 'мирный',
-        },
-        {
-          user: '64e2fde5da28496ed82cc2a5',
-          role: 'мирный',
-        },
-        {
-          user: '64e2fde5da28496ed82cc2a5',
-          role: 'мирный',
-        },
-        {
-          user: '64e2fde5da28496ed82cc2a5',
-          role: 'мирный',
-        },
+        ...peace.map((item) => {
+          return {
+            user: item,
+            role: RED,
+            bestPlayer: bestPlayer.some((bp) => {
+              return bp === item;
+            }),
+            modKill: modKill.some((mk) => {
+              return mk === item;
+            }),
+          };
+        }),
+        ...mafia.map((item) => {
+          return {
+            user: item,
+            role: BLACK,
+            bestPlayer: bestPlayer.some((bp) => {
+              return bp === item;
+            }),
+            modKill: modKill.some((mk) => {
+              return mk === item;
+            }),
+          };
+        }),
       ],
     };
     e.preventDefault();
-    console.log('formValues=>', formValues)
-    // await createGame({
-    //   title: 'New',
-    //   gameMaster: '64e2fde5da28496ed82cc274',
-    //   date: '2020-04-21T00:00:00.000+00:00',
-    //   result: 'Победа города',
-    //   players: [{
-    //      user: '64e2fde5da28496ed82cc2a5',
-    //     role: 'шериф'
-    //   },
-    //   {
-    //      user: '64e2fde5da28496ed82cc2a5',
-    //     role: 'дон'
-    //   },
-    //   {
-    //      user: '64e2fde5da28496ed82cc2a5',
-    //     role: 'мафия'
-    //   },
-    //   {
-    //      user: '64e2fde5da28496ed82cc2a5',
-    //     role: 'мафия'
-    //   },
-    //   {
-    //      user: '64e2fde5da28496ed82cc2a5',
-    //     role: 'мирный'
-    //   },
-    //   {
-    //      user: '64e2fde5da28496ed82cc2a5',
-    //     role: 'мирный'
-    //   },
-    //   {
-    //      user: '64e2fde5da28496ed82cc2a5',
-    //     role: 'мирный'
-    //   },
-    //   {
-    //      user: '64e2fde5da28496ed82cc2a5',
-    //     role: 'мирный'
-    //   },
-    //   {
-    //      user: '64e2fde5da28496ed82cc2a5',
-    //     role: 'мирный'
-    //   },
-    //   {
-    //      user: '64e2fde5da28496ed82cc2a5',
-    //     role: 'мирный'
-    //   },
+    await createGame(newGame);
+    setFormValues({
+    title: '',
+    gameMaster: '',
+    result: '',
+    date: '',
+    mafia: [],
+    done: '',
+    sheriff: '',
+    peace: [],
+    bestPlayer: [],
+    modKill: [],
+  })
+    onClose();
 
-    //   ]
-
-    // });
-
-    // const players = [
-    //   { user: formValues.mafia, role: 'мафия' },
-    //   { user: formValues.done, role: 'дон' },
-    //   { user: formValues.sheriff, role: 'шериф' },
-    //   { user: formValues.peace, role: 'мирный' },
-    // ];
-
-    // const data = {
-    //   title: formValues.title,
-    //   gameMaster: formValues.gameMaster,
-    //   date: formValues.date,
-    //   result: formValues.result,
-    //   //   players: [
-    //   // {user:
-    //   //   role:
-    //   //   modKill:
-    //   //   bestPlayer: }
-    //   //   ]
-    // };
   };
   return (
     <Popup isOpen={isOpen}>
@@ -189,7 +201,8 @@ const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
         </div>
         <Slider
           onInputChange={handleInputChange}
-          
+          dataForm={formValues}
+          onRemove={handleRemove}
         />
       </form>
     </Popup>

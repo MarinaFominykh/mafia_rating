@@ -118,3 +118,23 @@ export const optionsUser = (users) => {
         };
     });
 }
+
+export function mapIdsToNames(ids, objects) {
+  return ids.map((id) => {
+    const foundObject = objects.find((obj) => obj._id === id);
+    if (foundObject) {
+      return { id, name: foundObject.name };
+    }
+    return { id, name: "" };
+  });
+}
+
+export function mapIdToName(id, objects) {
+  const foundObject = objects?.find((obj) => obj._id === id);
+  if (foundObject) {
+    return { id, name: foundObject.name };
+  }
+  return { id, name: "" };
+}
+
+

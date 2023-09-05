@@ -22,4 +22,5 @@ export const gameFormSlice = createSlice({
   },
 });
 
+export const { getData } = gameFormSlice.actions
 export default gameFormSlice.reducer;

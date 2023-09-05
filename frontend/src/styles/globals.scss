@@ -38,6 +38,10 @@ table tr td:first-child::before {
   box-sizing: border-box;
 }
 
+ul {
+  list-style: none;
+}
+
 .body {
   background: #f9f9fa;
   font-family: $font-family;
@@ -81,13 +85,28 @@ table tr td:first-child::before {
   color: #80858e;
   margin-bottom: 4px;
 }
+input[type="date"]::before {
+    color: black;
+    content: attr(placeholder);
+}
+input[type="date"] {
+    color: #ffffff;
+}
+input[type="date"]:focus,
+input[type="date"]:valid {
+    color: black;
+}
+input[type="date"]:focus::before,
+input[type="date"]:valid::before {
+    content: "" !important;
+}
 .input {
   @include regularText;
   font-size: 16px;
   line-height: 20px;
   color: black;
   width: 100%;
-  height: 38px;
+  height: 42px;
   padding: 10px 8px;
   box-sizing: border-box;
   background: #ffffff;

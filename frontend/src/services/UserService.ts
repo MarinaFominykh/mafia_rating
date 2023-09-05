@@ -5,13 +5,13 @@ import { IUser } from '@/models/IUser';
 export const userAPI = createApi({
   reducerPath: 'userApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001' }),
-  tagTypes: ['Game'],
+  tagTypes: ['User'],
   endpoints: (build) => ({
     fetchAllUsers: build.query<IUser[], any>({
       query: () => ({
         url: '/players',
       }),
-      providesTags: (result) => ['Game'],
+      providesTags: (result) => ['User'],
     }),
     createUser: build.mutation<IUser, IUser>({
       query: (user) => ({
@@ -19,7 +19,7 @@ export const userAPI = createApi({
         method: 'POST',
         body: user,
       }),
-      invalidatesTags: ['Game'],
+      invalidatesTags: ['User'],
     }),
     editUser: build.mutation<IUser, IUser>({
       query: (user) => ({
@@ -27,7 +27,7 @@ export const userAPI = createApi({
         method: 'PATCH',
         body:{name: user.name},
       }),
-      invalidatesTags: ['Game'],
+      invalidatesTags: ['User'],
     }),
 
     deleteUser: build.mutation<IUser, IUser>({
@@ -35,7 +35,7 @@ export const userAPI = createApi({
         url: `/players/${user._id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Game'],
+      invalidatesTags: ['User'],
     }),
   }),
 });

@@ -38,8 +38,8 @@ const validateCreateGame = celebrate({
     players: Joi.array().length(10).required().items(Joi.object().keys({
       user: Joi.string().length(24).hex().required(),
       role: Joi.string().required(),
-      modKill: Joi.string(),
-      bestPlayer: Joi.string(),
+      modKill: Joi.boolean(),
+      bestPlayer: Joi.boolean(),
 
     })),
 
@@ -58,8 +58,8 @@ const validateCreateGames = celebrate({
       players: Joi.array().length(10).required().items(Joi.object().keys({
         user: Joi.string().length(24).hex().required(),
         role: Joi.string().required(),
-        modKill: Joi.string(),
-        bestPlayer: Joi.string(),
+        modKill: Joi.boolean(),
+        bestPlayer: Joi.boolean(),
 
       })),
     }),
@@ -81,8 +81,8 @@ const validateUpdateGame = celebrate({
     players: Joi.array().length(10).required().items(Joi.object().keys({
       user: Joi.string().length(24).hex().required(),
       role: Joi.string().required(),
-      modKill: Joi.string(),
-      bestPlayer: Joi.string(),
+      modKill: Joi.boolean(),
+      bestPlayer: Joi.boolean(),
 
     })),
 

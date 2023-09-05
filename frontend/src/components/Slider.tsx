@@ -10,15 +10,17 @@ import { userAPI } from '@/services/UserService';
 import { optionsUser } from '../utils/functions';
 import { optionsResult } from '@/utils/constans';
 import InfoTooltip from './InfoTooltip';
+import { FormValues } from './AddGameForm';
+import { mapIdsToNames, mapIdToName } from '../utils/functions';
 
 interface SliderProps {
   onInputChange: (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
-
+  dataForm: FormValues;
+  onRemove: (id: string, field: string) => void;
 }
-const Slider: FC<SliderProps> = ({ onInputChange}) => {
-  const [value, setValue] = useState('');
+const Slider: FC<SliderProps> = ({ onInputChange, dataForm, onRemove }) => {
   const pagination = {
     clickable: true,
     renderBullet: function (index: number, className: string) {
@@ -39,16 +41,38 @@ const Slider: FC<SliderProps> = ({ onInputChange}) => {
     prevEl: '.prev',
   };
 
+
   const {
     data: users,
     error,
     isLoading,
     isSuccess,
   } = userAPI.useFetchAllUsersQuery('');
+  const {
+    title,
+    date,
+    result,
+    gameMaster,
+    mafia,
+    done,
+    sheriff,
+    peace,
+    bestPlayer,
+    modKill,
+  } = dataForm;
 
-  const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
-    setValue(e.target.value);
-  };
+  const mafiaArray = mapIdsToNames(mafia, users);
+  const doneObj = mapIdToName(done, users);
+  const sheriffObj = mapIdToName(sheriff, users);
+  const peaceArray = mapIdsToNames(peace, users);
+  let currentPlayerArray = [...mafiaArray];
+  if (doneObj.name && doneObj.id) {
+    currentPlayerArray.push(doneObj);
+  }
+  if (sheriffObj.name && sheriffObj.id) {
+    currentPlayerArray.push(sheriffObj);
+  }
+  currentPlayerArray = [...currentPlayerArray, ...peaceArray];
 
   return (
     <>
@@ -75,7 +99,8 @@ const Slider: FC<SliderProps> = ({ onInputChange}) => {
               className={`input ${styles.input}`}
               type='text'
               onChange={onInputChange}
-              // required
+              value={title}
+              required
             />
             <InfoTooltip error='Error' />
             <label className={`label ${styles.label}`} htmlFor='gmAddGame'>
@@ -86,8 +111,9 @@ const Slider: FC<SliderProps> = ({ onInputChange}) => {
               name='gameMaster'
               className={`input ${styles.input}`}
               placeholder='Выберите ведущего'
-              // required
+              required
               onChange={onInputChange}
+              value={gameMaster}
             >
               <option></option>
               {users?.map((user) => {
@@ -110,9 +136,11 @@ const Slider: FC<SliderProps> = ({ onInputChange}) => {
                 id='dateAddGame'
                 name='date'
                 className={`input ${styles.input_horizontal}`}
+                placeholder="" 
                 type='date'
-                // required
+                required
                 onChange={onInputChange}
+                value={date}
               />
               <InfoTooltip error='Error' />
             </label>
@@ -126,8 +154,9 @@ const Slider: FC<SliderProps> = ({ onInputChange}) => {
                 id='resultAddGame'
                 name='result'
                 className={`input ${styles.input_horizontal}`}
-                // required
+                required
                 onChange={onInputChange}
+                value={result}
               >
                 <option></option>
                 <option value='Победа города'>Победа города</option>
@@ -139,136 +168,203 @@ const Slider: FC<SliderProps> = ({ onInputChange}) => {
           </fieldset>
         </SwiperSlide>
         <SwiperSlide>
-          <fieldset className={`fieldset ${styles.fields}`}>
+          <fieldset
+            className={`fieldset ${styles.fields} ${styles.fields_players}`}
+          >
             <label className={`label ${styles.label}`} htmlFor='mafiaAddGame'>
               Мафия
+              <select
+                id='mafiaAddGame'
+                name='mafia'
+                className={`input ${styles.input}`}
+                disabled={mafiaArray.length === 2}
+                required
+                onChange={onInputChange}
+               value={mafiaArray[mafiaArray.length-1]}
+                
+              >
+                <option></option>
+                {users?.map((user, i) => {
+                  return (
+                    <option key={user._id} value={user._id}>
+                      {user.name}
+                    </option>
+                  );
+                })}
+              </select>
+              {/* <InfoTooltip error='Error' /> */}
+              <div className={styles.nicks_container}>
+                <p className={styles.selected}>
+                  Выбрано: {mafiaArray.length}/2
+                </p>
+                <ul className={styles.nicks}>
+                  {mafiaArray.map((item: { id: string; name: string }) => {
+                    return (
+                      <li key={item.id} className={styles.nick}>
+                        <p className={styles.nick_text}>{item.name}</p>
+                        <button
+                          onClick={() => onRemove(item.id, 'mafia')}
+                          className={styles.nick_button}
+                        ></button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
             </label>
-            <select
-              id='mafiaAddGame'
-              name='mafia'
-              className={`input ${styles.input}`}
-            
-              // required
-              // onChange={onInputChange}
-              onChange={onInputChange}
-            >
-              <option></option>
-              {users?.map((user) => {
-                return (
-                  <option key={user._id} value={user._id}>
-                    {user.name}
-                  </option>
-                );
-              })}
-            </select>
-            <InfoTooltip error='Error' />
+
             <label className={`label ${styles.label}`} htmlFor='doneAddGame'>
               Дон
+              <select
+                id='doneAddGame'
+                name='done'
+                className={`input ${styles.input}`}
+                required
+                onChange={onInputChange}
+                value={done}
+              >
+                <option></option>
+                {users?.map((user) => {
+                  return (
+                    <option key={user._id} value={user._id}>
+                      {user.name}
+                    </option>
+                  );
+                })}
+              </select>
+              <div className={styles.nicks_container}>
+                <p className={styles.selected}>Выбрано: {done ? 1 : 0}/1</p>
+                {done && (
+                  <div className={styles.nick}>
+                    <p className={styles.nick_text}>{doneObj.name}</p>
+                    <button
+                      onClick={() => onRemove(doneObj.id, 'done')}
+                      className={styles.nick_button}
+                    ></button>
+                  </div>
+                )}
+              </div>
+              {/* <InfoTooltip error='Error' /> */}
             </label>
-            <select
-              id='doneAddGame'
-              name='done'
-              className={`input ${styles.input}`}
-              // required
-              onChange={onInputChange}
-            >
-              <option></option>
-              {users?.map((user) => {
-                return (
-                  <option key={user._id} value={user._id}>
-                    {user.name}
-                  </option>
-                );
-              })}
-            </select>
-            <InfoTooltip error='Error' />
+
             <label className={`label ${styles.label}`} htmlFor='sheriffAddGame'>
               Шериф
+              <select
+                id='sheriffAddGame'
+                name='sheriff'
+                className={`input ${styles.input}`}
+                required
+                onChange={onInputChange}
+                value={sheriff}
+              >
+                <option></option>
+                {users?.map((user) => {
+                  return (
+                    <option key={user._id} value={user._id}>
+                      {user.name}
+                    </option>
+                  );
+                })}
+              </select>
+              <div className={styles.nicks_container}>
+                <p className={styles.selected}>Выбрано: {sheriff ? 1 : 0}/1</p>
+                {sheriff && (
+                  <div className={styles.nick}>
+                    <p className={styles.nick_text}>{sheriffObj.name}</p>
+                    <button
+                      onClick={() => onRemove(sheriffObj.id, 'sheriff')}
+                      className={styles.nick_button}
+                    ></button>
+                  </div>
+                )}
+              </div>
+              {/* <InfoTooltip error='Error' /> */}
             </label>
-            <select
-              id='sheriffAddGame'
-              name='sheriff'
-              className={`input ${styles.input}`}
-              // required
-              onChange={onInputChange}
-            >
-              <option></option>
-              {users?.map((user) => {
-                return (
-                  <option key={user._id} value={user._id}>
-                    {user.name}
-                  </option>
-                );
-              })}
-            </select>
-            <InfoTooltip error='Error' />
+
             <label className={`label ${styles.label}`} htmlFor='peaceAddGame'>
               Мирные жители
+              <select
+                id='peaceAddGame'
+                name='peace'
+                className={`input ${styles.input}`}
+                required
+                onChange={onInputChange}
+                value={peaceArray[peaceArray.length-1]}
+                disabled={peace.length === 6}
+              >
+                <option></option>
+                {users?.map((user) => {
+                  return (
+                    <option key={user._id} value={user._id}>
+                      {user.name}
+                    </option>
+                  );
+                })}
+              </select>
+              <div className={`${styles.nicks_container}`}>
+                <p className={styles.selected}>Выбрано: {peace.length}/6</p>
+                <ul className={styles.peace_container}>
+                  {peaceArray.map((item: { id: string; name: string }) => {
+                    return (
+                      <li key={item.id} className={styles.nick}>
+                        <p className={styles.nick_text}>{item.name}</p>
+                        <button
+                          onClick={() => onRemove(item.id, 'peace')}
+                          className={styles.nick_button}
+                        ></button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+              {/* <InfoTooltip error='Error' /> */}
             </label>
-            <select
-              id='peaceAddGame'
-              name='peace'
-              className={`input ${styles.input}`}
-              // required
-              onChange={onInputChange}
-            >
-              <option></option>
-              {users?.map((user) => {
-                return (
-                  <option key={user._id} value={user._id}>
-                    {user.name}
-                  </option>
-                );
-              })}
-            </select>
-            <InfoTooltip error='Error' />
           </fieldset>
         </SwiperSlide>
         <SwiperSlide>
           <fieldset className={`fieldset ${styles.fields}`}>
-              <label className={`label ${styles.label}`} htmlFor='bpAddGame'>
+            <label className={`label ${styles.label}`} htmlFor='bpAddGame'>
               Лучший игрок
             </label>
             <select
               id='bpAddGame'
               name='bestPlayer'
               className={`input ${styles.input}`}
-              // required
+              required
               onChange={onInputChange}
+              
             >
               <option></option>
-              {users?.map((user) => {
+              {currentPlayerArray?.map((user) => {
                 return (
-                  <option key={user._id} value={user._id}>
+                  <option key={user.id} value={user.id}>
                     {user.name}
                   </option>
                 );
               })}
             </select>
             <InfoTooltip error='Error' />
-              <label className={`label ${styles.label}`} htmlFor='mkAddGame'>
+            <label className={`label ${styles.label}`} htmlFor='mkAddGame'>
               МК
             </label>
             <select
               id='mkAddGame'
               name='modKill'
               className={`input ${styles.input}`}
-              // required
+              required
               onChange={onInputChange}
             >
               <option></option>
-              {users?.map((user) => {
+              {currentPlayerArray?.map((user) => {
                 return (
-                  <option key={user._id} value={user._id}>
+                  <option key={user.id} value={user.id}>
                     {user.name}
                   </option>
                 );
               })}
             </select>
             <InfoTooltip error='Error' />
-        
           </fieldset>
-      
         </SwiperSlide>
       </Swiper>
       <div className={styles.buttons}>
