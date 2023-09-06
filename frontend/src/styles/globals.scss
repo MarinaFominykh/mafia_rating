@@ -60,6 +60,9 @@ ul {
   margin: auto;
   box-sizing: border-box;
 }
+button:focus {
+  outline: 2px solid black;
+}
 
 .button {
   @include regularText;

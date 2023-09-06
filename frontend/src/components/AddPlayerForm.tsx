@@ -4,6 +4,8 @@ import Popup from './Popup';
 import { userAPI } from '@/services/UserService';
 import { IUser } from '@/models/IUser';
 import Slider from './Slider';
+import { useFormWithValidation } from '@/hooks/UseFormValidation';
+import InfoTooltip from './InfoTooltip';
 
 interface AddPlayerFormProps {
   isOpen: boolean;
@@ -11,19 +13,25 @@ interface AddPlayerFormProps {
 }
 
 const AddPlayerForm: FC<AddPlayerFormProps> = ({ isOpen, onClose }) => {
-  const [name, setName] = useState('');
-  const [createUser, { error: createError, isLoading: isCreateLoading }] =
-    userAPI.useCreateUserMutation();
+  const { values, handleChange, errors, isValid, resetForm } =
+    useFormWithValidation();
+  const { name } = values;
+  const [
+    createUser,
+    { error: createError, isLoading: isCreateLoading, isSuccess },
+  ] = userAPI.useCreateUserMutation();
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  };
+  // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  //   setName(e.target.value);
+  // };
 
   const handleCreate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await createUser({ name } as IUser);
-    setName('');
-    onClose();
+    if (isSuccess) {
+      resetForm();
+      onClose();
+    } else console.log('какая-то ошибка=>', createError);
   };
   return (
     <Popup isOpen={isOpen}>
@@ -40,14 +48,17 @@ const AddPlayerForm: FC<AddPlayerFormProps> = ({ isOpen, onClose }) => {
 
           <input
             type='text'
+            name='name'
             placeholder='Введите имя'
             className='input'
-            value={name}
+            value={values.name || ''}
             onChange={handleChange}
+            required
           />
+          <InfoTooltip error={errors.name} />
         </fieldset>
 
-        <button className={styles.submit} type='submit'>
+        <button disabled={!isValid} className={styles.submit} type='submit'>
           Cохранить
         </button>
       </form>

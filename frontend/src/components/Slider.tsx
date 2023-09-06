@@ -12,6 +12,7 @@ import { optionsResult } from '@/utils/constans';
 import InfoTooltip from './InfoTooltip';
 import { FormValues } from './AddGameForm';
 import { mapIdsToNames, mapIdToName } from '../utils/functions';
+import { useFormWithValidation } from '@/hooks/UseFormValidation';
 
 interface SliderProps {
   onInputChange: (
@@ -19,8 +20,16 @@ interface SliderProps {
   ) => void;
   dataForm: FormValues;
   onRemove: (id: string, field: string) => void;
+  isValid: boolean;
+  errors: any;
 }
-const Slider: FC<SliderProps> = ({ onInputChange, dataForm, onRemove }) => {
+const Slider: FC<SliderProps> = ({
+  onInputChange,
+  dataForm,
+  onRemove,
+  isValid,
+  errors,
+}) => {
   const pagination = {
     clickable: true,
     renderBullet: function (index: number, className: string) {
@@ -41,7 +50,6 @@ const Slider: FC<SliderProps> = ({ onInputChange, dataForm, onRemove }) => {
     prevEl: '.prev',
   };
 
-
   const {
     data: users,
     error,
@@ -60,11 +68,14 @@ const Slider: FC<SliderProps> = ({ onInputChange, dataForm, onRemove }) => {
     bestPlayer,
     modKill,
   } = dataForm;
+  // const { errors } = useFormWithValidation();
 
   const mafiaArray = mapIdsToNames(mafia, users);
   const doneObj = mapIdToName(done, users);
   const sheriffObj = mapIdToName(sheriff, users);
   const peaceArray = mapIdsToNames(peace, users);
+  const bpArray = mapIdsToNames(bestPlayer, users);
+   const mkArray = mapIdsToNames(modKill, users);
   let currentPlayerArray = [...mafiaArray];
   if (doneObj.name && doneObj.id) {
     currentPlayerArray.push(doneObj);
@@ -92,63 +103,58 @@ const Slider: FC<SliderProps> = ({ onInputChange, dataForm, onRemove }) => {
           <fieldset className={`fieldset ${styles.fields}`}>
             <label className={`label ${styles.label}`} htmlFor='titleAddGame'>
               Название игры
+              <input
+                id='titleAddGame'
+                name='title'
+                className={`input ${styles.input}`}
+                type='text'
+                onChange={onInputChange}
+                value={title}
+                required
+              />
+              <InfoTooltip error={errors.title} />
             </label>
-            <input
-              id='titleAddGame'
-              name='title'
-              className={`input ${styles.input}`}
-              type='text'
-              onChange={onInputChange}
-              value={title}
-              required
-            />
-            <InfoTooltip error='Error' />
+
             <label className={`label ${styles.label}`} htmlFor='gmAddGame'>
               Выберите ведущего
+              <select
+                id='gmAddGame'
+                name='gameMaster'
+                className={`input ${styles.input}`}
+                placeholder='Выберите ведущего'
+                required
+                onChange={onInputChange}
+                value={gameMaster}
+              >
+                <option></option>
+                {users?.map((user) => {
+                  return (
+                    <option key={user._id} value={user._id}>
+                      {user.name}
+                    </option>
+                  );
+                })}
+              </select>
+              <InfoTooltip error={errors.gameMaster} />
             </label>
-            <select
-              id='gmAddGame'
-              name='gameMaster'
-              className={`input ${styles.input}`}
-              placeholder='Выберите ведущего'
-              required
-              onChange={onInputChange}
-              value={gameMaster}
-            >
-              <option></option>
-              {users?.map((user) => {
-                return (
-                  <option key={user._id} value={user._id}>
-                    {user.name}
-                  </option>
-                );
-              })}
-            </select>
-            <InfoTooltip error='Error' />
           </fieldset>
           <fieldset className={`fieldset ${styles.fields_horizontal}`}>
-            <label
-              className={`label ${styles.label} ${styles.label_horizontal}`}
-              htmlFor='dateAddGame'
-            >
+            <label className={`label ${styles.label}`} htmlFor='dateAddGame'>
               Дата окончания игры
               <input
                 id='dateAddGame'
                 name='date'
                 className={`input ${styles.input_horizontal}`}
-                placeholder="" 
+                placeholder=''
                 type='date'
                 required
                 onChange={onInputChange}
                 value={date}
               />
-              <InfoTooltip error='Error' />
+              <InfoTooltip error={errors.date} />
             </label>
 
-            <label
-              className={`label ${styles.label} ${styles.label_horizontal}`}
-              htmlFor='resultAddGame'
-            >
+            <label className={`label ${styles.label}`} htmlFor='resultAddGame'>
               Результат игры
               <select
                 id='resultAddGame'
@@ -159,11 +165,13 @@ const Slider: FC<SliderProps> = ({ onInputChange, dataForm, onRemove }) => {
                 value={result}
               >
                 <option></option>
-                <option value='Победа города'>Победа города</option>
-                <option value='Победа мафии'>Победа мафии</option>
-                <option value='Ничья'>Ничья</option>
+                {optionsResult.map((option, i) => (
+                  <option key={i} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
               </select>
-              <InfoTooltip error='Error' />
+              <InfoTooltip error={errors.result} />
             </label>
           </fieldset>
         </SwiperSlide>
@@ -180,8 +188,7 @@ const Slider: FC<SliderProps> = ({ onInputChange, dataForm, onRemove }) => {
                 disabled={mafiaArray.length === 2}
                 required
                 onChange={onInputChange}
-               value={mafiaArray[mafiaArray.length-1]}
-                
+                defaultValue={''}
               >
                 <option></option>
                 {users?.map((user, i) => {
@@ -192,7 +199,6 @@ const Slider: FC<SliderProps> = ({ onInputChange, dataForm, onRemove }) => {
                   );
                 })}
               </select>
-              {/* <InfoTooltip error='Error' /> */}
               <div className={styles.nicks_container}>
                 <p className={styles.selected}>
                   Выбрано: {mafiaArray.length}/2
@@ -221,7 +227,7 @@ const Slider: FC<SliderProps> = ({ onInputChange, dataForm, onRemove }) => {
                 className={`input ${styles.input}`}
                 required
                 onChange={onInputChange}
-                value={done}
+                disabled={doneObj.name}
               >
                 <option></option>
                 {users?.map((user) => {
@@ -244,7 +250,6 @@ const Slider: FC<SliderProps> = ({ onInputChange, dataForm, onRemove }) => {
                   </div>
                 )}
               </div>
-              {/* <InfoTooltip error='Error' /> */}
             </label>
 
             <label className={`label ${styles.label}`} htmlFor='sheriffAddGame'>
@@ -255,7 +260,7 @@ const Slider: FC<SliderProps> = ({ onInputChange, dataForm, onRemove }) => {
                 className={`input ${styles.input}`}
                 required
                 onChange={onInputChange}
-                value={sheriff}
+                disabled={sheriffObj.name}
               >
                 <option></option>
                 {users?.map((user) => {
@@ -289,7 +294,6 @@ const Slider: FC<SliderProps> = ({ onInputChange, dataForm, onRemove }) => {
                 className={`input ${styles.input}`}
                 required
                 onChange={onInputChange}
-                value={peaceArray[peaceArray.length-1]}
                 disabled={peace.length === 6}
               >
                 <option></option>
@@ -317,7 +321,6 @@ const Slider: FC<SliderProps> = ({ onInputChange, dataForm, onRemove }) => {
                   })}
                 </ul>
               </div>
-              {/* <InfoTooltip error='Error' /> */}
             </label>
           </fieldset>
         </SwiperSlide>
@@ -325,33 +328,46 @@ const Slider: FC<SliderProps> = ({ onInputChange, dataForm, onRemove }) => {
           <fieldset className={`fieldset ${styles.fields}`}>
             <label className={`label ${styles.label}`} htmlFor='bpAddGame'>
               Лучший игрок
+              <select
+                id='bpAddGame'
+                name='bestPlayer'
+                className={`input ${styles.input}`}
+                onChange={onInputChange}
+              >
+                <option></option>
+                {currentPlayerArray?.map((user) => {
+                  return (
+                    <option key={user.id} value={user.id}>
+                      {user.name}
+                    </option>
+                  );
+                })}
+              </select>
+              <div className={`${styles.nicks_container}`}>
+                <ul className={styles.peace_container}>
+                  {bpArray.map(
+                    (item: {id: string, name: string}) => {
+                      return (
+                        <li key={item.id} className={styles.nick}>
+                          <p className={styles.nick_text}>{item.name}</p>
+                          <button
+                            onClick={() => onRemove(item.id, 'bestPlayer')}
+                            className={styles.nick_button}
+                          ></button>
+                        </li>
+                      );
+                    }
+                  )}
+                </ul>
+              </div>
             </label>
-            <select
-              id='bpAddGame'
-              name='bestPlayer'
-              className={`input ${styles.input}`}
-              required
-              onChange={onInputChange}
-              
-            >
-              <option></option>
-              {currentPlayerArray?.map((user) => {
-                return (
-                  <option key={user.id} value={user.id}>
-                    {user.name}
-                  </option>
-                );
-              })}
-            </select>
-            <InfoTooltip error='Error' />
+
             <label className={`label ${styles.label}`} htmlFor='mkAddGame'>
               МК
-            </label>
-            <select
+               <select
               id='mkAddGame'
               name='modKill'
               className={`input ${styles.input}`}
-              required
               onChange={onInputChange}
             >
               <option></option>
@@ -363,7 +379,26 @@ const Slider: FC<SliderProps> = ({ onInputChange, dataForm, onRemove }) => {
                 );
               })}
             </select>
-            <InfoTooltip error='Error' />
+               <div className={`${styles.nicks_container}`}>
+                <ul className={styles.peace_container}>
+                  {mkArray.map(
+                    (item: {id: string, name: string}) => {
+                      return (
+                        <li key={item.id} className={styles.nick}>
+                          <p className={styles.nick_text}>{item.name}</p>
+                          <button
+                            onClick={() => onRemove(item.id, 'modKill')}
+                            className={styles.nick_button}
+                          ></button>
+                        </li>
+                      );
+                    }
+                  )}
+                </ul>
+              </div>
+            </label>
+           
+           
           </fieldset>
         </SwiperSlide>
       </Swiper>
@@ -371,7 +406,11 @@ const Slider: FC<SliderProps> = ({ onInputChange, dataForm, onRemove }) => {
         <button type='button' className={`prev button ${styles.prev_button}`}>
           Назад
         </button>
-        <button type='submit' className='button'>
+        <button
+          type='submit'
+          className={`button ${styles.submit}`}
+          disabled={!isValid}
+        >
           Сохранить
         </button>
         <button type='button' className={`next button ${styles.next_button}`}>

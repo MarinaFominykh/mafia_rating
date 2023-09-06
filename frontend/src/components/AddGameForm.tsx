@@ -8,6 +8,7 @@ import { IUser } from '@/models/IUser';
 import { IGame } from '@/models/IGame';
 import { getData } from '../store/reducers/DataFormSlice';
 import { gameFormSlice } from '../store/reducers/DataFormSlice';
+import { useFormWithValidation } from '@/hooks/UseFormValidation';
 import {
   RED_RESULT,
   BLACK_RESULT,
@@ -24,7 +25,6 @@ interface AddGameFormProps {
   onClose: () => void;
 }
 export interface FormValues {
-  // [key: string]: any;
   title: string;
   gameMaster: string;
   result: string;
@@ -38,75 +38,14 @@ export interface FormValues {
 }
 
 const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
-  let mafia: string[] = [];
   const [createGame] = gameAPI.useCreateGameMutation();
   const dispatch = useAppDispatch();
-  const { title, gameMaster, date, result, players } = useAppSelector(
-    (state) => state.dataFormSlice
-  );
-  const [formValues, setFormValues] = useState<FormValues>({
-    title: '',
-    gameMaster: '',
-    result: '',
-    date: '',
-    mafia: [],
-    done: '',
-    sheriff: '',
-    peace: [],
-    bestPlayer: [],
-    modKill: [],
-  });
-
-  const handleInputChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = event.target;
-    if (
-      name === 'mafia' ||
-      name === 'peace' ||
-      name === 'bestPlayer' ||
-      name === 'modKill'
-    ) {
-      setFormValues({ ...formValues, [name]: [...formValues[name], value] });
-    } else {
-      setFormValues({ ...formValues, [name]: value });
-    }
-  };
-
-  const handleRemove = (id: string, field: string) => {
-    if (
-      field === 'mafia' ||
-      field === 'peace' ||
-      field === 'bestPlayer' ||
-      field === 'modKill'
-    ) {
-      setFormValues({
-        ...formValues,
-        [field]: formValues[field].filter((playerId: string) => {
-          return playerId !== id;
-        }),
-      });
-    } else {
-      setFormValues({ ...formValues, [field]: '' });
-    }
-  };
-
-  // const handleInputChange = (
-  //   event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  // ) => {
-  //   const { name, value } = event.target;
-  //   dispatch(
-  //       getData({
-  //         title: value,
-  //         gameMaster: value,
-  //         date: value,
-  //         result: value,
-  //         players: [],
-  //       })
-  //     );
-  // };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  // const { title, gameMaster, date, result, players } = useAppSelector(
+  //   (state) => state.dataFormSlice
+  // );
+    const { values, handleChange, errors, isValid, resetForm, handleRemove } =
+    useFormWithValidation();
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     const {
       title,
       gameMaster,
@@ -118,7 +57,7 @@ const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
       peace,
       bestPlayer,
       modKill,
-    } = formValues;
+    } = values;
     const newGame = {
       title,
       gameMaster,
@@ -173,21 +112,11 @@ const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
     };
     e.preventDefault();
     await createGame(newGame);
-    setFormValues({
-    title: '',
-    gameMaster: '',
-    result: '',
-    date: '',
-    mafia: [],
-    done: '',
-    sheriff: '',
-    peace: [],
-    bestPlayer: [],
-    modKill: [],
-  })
+    resetForm();
     onClose();
 
   };
+
   return (
     <Popup isOpen={isOpen}>
       <form className={styles.form} onSubmit={handleSubmit}>
@@ -200,9 +129,11 @@ const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
           ></button>
         </div>
         <Slider
-          onInputChange={handleInputChange}
-          dataForm={formValues}
+          onInputChange={handleChange}
+          dataForm={values}
           onRemove={handleRemove}
+          isValid = {isValid}
+          errors={errors}
         />
       </form>
     </Popup>

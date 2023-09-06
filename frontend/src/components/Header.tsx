@@ -1,7 +1,7 @@
 import React, {FC, useState} from 'react';
 import Link from 'next/link';
 import styles from '@/styles/Header.module.scss';
-import { checkbox } from "../store/actions";
+// import { checkbox } from "../store/actions";
 import { useDispatch, useSelector } from "react-redux";
 import AddGameForm from './AddGameForm';
 import { openPopup, closePopup } from '@/utils/functions';
@@ -18,10 +18,8 @@ import { openPopup, closePopup } from '@/utils/functions';
 //   type: string;
 //   payload: boolean;
 // }
-interface HeaderProps {
-  handleAddGame: () => void;
-}
-const Header: FC<HeaderProps> = ({handleAddGame}) => {
+
+const Header = () => {
   const [isAddGamePopupOpen, setIsAddGamePopupOpen] = useState(false);
 //   const dispatch = useDispatch();
 //  const checked = useSelector((state: RootState) => {
