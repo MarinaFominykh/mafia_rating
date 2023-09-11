@@ -1,5 +1,5 @@
 import { IUser } from '@/models/IUser';
-import { IDataUser } from '@/models/INewGame';
+import { IDataUser } from '@/models/IDataUser';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 interface PlayerState {

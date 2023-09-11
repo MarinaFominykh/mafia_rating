@@ -1,22 +1,27 @@
 import { createAction, createReducer, createSlice  } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-export interface yearRatingState {
-  value: string
+export interface yearState {
+  valueRaiting: string,
+  valueGames: string
 }
-const initialState: yearRatingState ={
-    value: "За все время"
+const initialState: yearState ={
+    valueRaiting: "За все время",
+    valueGames: "За все время",
 }
-export const selectYearRatingSlice = createSlice({
+export const selectYearSlice = createSlice({
   name: 'selectYearRating',
   initialState,
   reducers: {
      yearRating: (state, action: PayloadAction<string>) => {
-     state.value = action.payload
+     state.valueRaiting = action.payload
+    },
+     getYear: (state, action: PayloadAction<string>) => {
+     state.valueGames = action.payload
     },
   },
 })
 
-export const { yearRating } = selectYearRatingSlice.actions
+export const { yearRating, getYear } = selectYearSlice.actions
 
-export default selectYearRatingSlice.reducer
+export default selectYearSlice.reducer

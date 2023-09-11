@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { YEAR_OPTIONS } from '@/utils/constans';
 import { yearRating } from '@/store/selectPeriodReducer';
 import RatingTable from './RatingTable';
+import RateTable from './RateTable';
 import { filterResult } from '@/utils/functions';
 import { gameAPI } from '../services/GameService';
 
@@ -54,6 +55,7 @@ const RatingMain: FC <RatingMainProps> = ({handleAddPlayer}) => {
         <p className={styles.count_text}>Мафия</p>
       </div>
       <RatingTable handleAddPlayer={handleAddPlayer}/>
+      {/* <RateTable /> */}
     </section>
   );
 };

@@ -2,7 +2,7 @@ import React, { FC, useEffect } from 'react';
 import styles from '@/styles/PlayerRow.module.scss';
 import stylesTable from '@/styles/RatingTable.module.scss';
 import { IUser } from '@/models/IUser';
-import { IDataUser } from '@/models/INewGame';
+import { IDataUser } from '@/models/IDataUser';
 
 interface PlayerRowProps {
   // user: IUser;
