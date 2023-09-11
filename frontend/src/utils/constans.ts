@@ -11,6 +11,9 @@ export const BLACK = "мафия";
 export const RED = "мирный";
 export const BEST_PLAYER = "bestPlayer";
 export const MODKILL = "modKill";
+export const CONFLICT_NAME_MESSAGE =
+    "Игрок с таким именем уже существует";
+export const INVALID_DATA_MESSAGE = "Переданы некорректные данные. Длина имени должна содержать от 2 до 30 символов";
 
 export const optionsResult = [{
         value: 'Победа города',

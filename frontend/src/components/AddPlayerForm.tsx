@@ -1,4 +1,11 @@
-import React, { FC, ReactNode, useState, ChangeEvent, FormEvent } from 'react';
+import React, {
+  FC,
+  ReactNode,
+  useState,
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+} from 'react';
 import styles from '@/styles/AddPlayerForm.module.scss';
 import Popup from './Popup';
 import { userAPI } from '@/services/UserService';
@@ -6,6 +13,8 @@ import { IUser } from '@/models/IUser';
 import Slider from './Slider';
 import { useFormWithValidation } from '@/hooks/UseFormValidation';
 import InfoTooltip from './InfoTooltip';
+import { Error } from '@/models/Error';
+import { CONFLICT_NAME_MESSAGE, INVALID_DATA_MESSAGE } from '@/utils/constans';
 
 interface AddPlayerFormProps {
   isOpen: boolean;
@@ -13,17 +22,19 @@ interface AddPlayerFormProps {
 }
 
 const AddPlayerForm: FC<AddPlayerFormProps> = ({ isOpen, onClose }) => {
+  const [message, setMessage] = useState('');
   const { values, handleChange, errors, isValid, resetForm } =
     useFormWithValidation();
   const { name } = values;
   const [
     createUser,
-    { error: createError, isLoading: isCreateLoading, isSuccess },
+    { error, isLoading: isCreateLoading, isSuccess, isError },
   ] = userAPI.useCreateUserMutation();
 
-  // const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-  //   setName(e.target.value);
-  // };
+  const showInfoToolTip = (error: string) => {
+    setMessage(error);
+    setTimeout(() => setMessage(''), 8000);
+  };
 
   const handleCreate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,8 +42,21 @@ const AddPlayerForm: FC<AddPlayerFormProps> = ({ isOpen, onClose }) => {
     if (isSuccess) {
       resetForm();
       onClose();
-    } else console.log('какая-то ошибка=>', createError);
+    }
   };
+  useEffect(() => {
+    // Добавить проверку кода ошибки
+    if (isError) {
+      if ((error as Error).status === 409) {
+        showInfoToolTip(CONFLICT_NAME_MESSAGE);
+      } else if ((error as Error)?.status === 400) {
+        showInfoToolTip(INVALID_DATA_MESSAGE);
+      } else
+        showInfoToolTip(
+          `Неизвестная ошибка. Код ошибки: ${(error as Error).status}`
+        );
+    }
+  }, [error, isError]);
   return (
     <Popup isOpen={isOpen}>
       <form className={styles.form} onSubmit={handleCreate}>
@@ -57,6 +81,11 @@ const AddPlayerForm: FC<AddPlayerFormProps> = ({ isOpen, onClose }) => {
           />
           <InfoTooltip error={errors.name} />
         </fieldset>
+        {isError && (
+          <div className={styles.error}>
+            <InfoTooltip error={message}></InfoTooltip>
+          </div>
+        )}
 
         <button disabled={!isValid} className={styles.submit} type='submit'>
           Cохранить

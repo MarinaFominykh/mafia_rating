@@ -137,4 +137,3 @@ export function mapIdToName(id, objects) {
   return { id, name: "" };
 }
 
-
