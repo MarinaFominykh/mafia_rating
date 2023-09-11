@@ -1,4 +1,4 @@
-import React, { FC, ReactNode, useState, ChangeEvent, FormEvent } from 'react';
+import React, { FC, ReactNode, useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import styles from '@/styles/AddPlayerForm.module.scss';
 import Popup from './Popup';
 import { userAPI } from '@/services/UserService';
@@ -15,6 +15,7 @@ interface AddPlayerFormProps {
 }
 
 const AddPlayerForm: FC<AddPlayerFormProps> = ({ isOpen, onClose }) => {
+  const [message, setMessage] = useState('');
   const { values, handleChange, errors, isValid, resetForm } =
     useFormWithValidation();
   const { name } = values;
