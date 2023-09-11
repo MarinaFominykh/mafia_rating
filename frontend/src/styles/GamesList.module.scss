@@ -1,0 +1,26 @@
+@import './mixin.scss';
+
+.games {
+    display: grid;
+  gap: 23px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-bottom: 30px;
+}
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+@media screen and (max-width: 769px) {
+  .games {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media screen and (max-width: 540px) {
+  .games {
+    grid-template-columns: 1fr;
+  } 
+  
+}

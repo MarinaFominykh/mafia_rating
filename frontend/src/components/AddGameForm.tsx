@@ -1,5 +1,6 @@
 import React, { FC, FormEvent, ChangeEvent, useState, useEffect } from 'react';
 import styles from '@/styles/AddGameForm.module.scss';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import Popup from './Popup';
 import Slider from './Slider';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
@@ -9,6 +10,7 @@ import { IGame } from '@/models/IGame';
 import { getData } from '../store/reducers/DataFormSlice';
 import { gameFormSlice } from '../store/reducers/DataFormSlice';
 import { useFormWithValidation } from '@/hooks/UseFormValidation';
+import InfoTooltip from './InfoTooltip';
 import {
   RED_RESULT,
   BLACK_RESULT,
@@ -37,15 +39,33 @@ export interface FormValues {
   modKill: string[];
 }
 
+export interface Error {
+  data: {
+    error: string;
+    message: string;
+    statusCode: number;
+  };
+  status: number;
+}
+
 const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
-  const [createGame] = gameAPI.useCreateGameMutation();
+  const [createGame, { isSuccess, isError, error }] =
+    gameAPI.useCreateGameMutation();
+  const [message, setMessage] = useState('');
+
   const dispatch = useAppDispatch();
   // const { title, gameMaster, date, result, players } = useAppSelector(
   //   (state) => state.dataFormSlice
   // );
-    const { values, handleChange, errors, isValid, resetForm, handleRemove } =
+  const { values, handleChange, errors, isValid, resetForm, handleRemove } =
     useFormWithValidation();
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+
+  const showInfoToolTip = (error: string) => {
+    setMessage(error);
+    setTimeout(() => setMessage(''), 8000);
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     const {
       title,
       gameMaster,
@@ -112,9 +132,13 @@ const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
     };
     e.preventDefault();
     await createGame(newGame);
-    resetForm();
-    onClose();
-
+    if (isSuccess) {
+      resetForm();
+      onClose();
+    }
+    if(isError) {
+      showInfoToolTip("Какая-то ошибка")
+    }
   };
 
   return (
@@ -132,9 +156,11 @@ const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
           onInputChange={handleChange}
           dataForm={values}
           onRemove={handleRemove}
-          isValid = {isValid}
+          isValid={isValid}
           errors={errors}
+          errorCreate={error as Error}
         />
+        {isError && <InfoTooltip error={message}></InfoTooltip>}
       </form>
     </Popup>
   );

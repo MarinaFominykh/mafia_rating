@@ -1,11 +1,4 @@
-import React, {
-  FC,
-  ReactNode,
-  useState,
-  ChangeEvent,
-  FormEvent,
-  useEffect,
-} from 'react';
+import React, { FC, ReactNode, useState, ChangeEvent, FormEvent } from 'react';
 import styles from '@/styles/AddPlayerForm.module.scss';
 import Popup from './Popup';
 import { userAPI } from '@/services/UserService';
@@ -22,7 +15,6 @@ interface AddPlayerFormProps {
 }
 
 const AddPlayerForm: FC<AddPlayerFormProps> = ({ isOpen, onClose }) => {
-  const [message, setMessage] = useState('');
   const { values, handleChange, errors, isValid, resetForm } =
     useFormWithValidation();
   const { name } = values;
@@ -39,6 +31,7 @@ const AddPlayerForm: FC<AddPlayerFormProps> = ({ isOpen, onClose }) => {
   const handleCreate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await createUser({ name } as IUser);
+
     if (isSuccess) {
       resetForm();
       onClose();
@@ -88,7 +81,7 @@ const AddPlayerForm: FC<AddPlayerFormProps> = ({ isOpen, onClose }) => {
         )}
 
         <button disabled={!isValid} className={styles.submit} type='submit'>
-          Cохранить
+          Сохранить
         </button>
       </form>
     </Popup>

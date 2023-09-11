@@ -14,6 +14,14 @@ import { FormValues } from './AddGameForm';
 import { mapIdsToNames, mapIdToName } from '../utils/functions';
 import { useFormWithValidation } from '@/hooks/UseFormValidation';
 
+interface Error {
+  data: {
+    error: string;
+    message: string;
+    statusCode: number;
+  };
+  status: number;
+}
 interface SliderProps {
   onInputChange: (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -22,6 +30,8 @@ interface SliderProps {
   onRemove: (id: string, field: string) => void;
   isValid: boolean;
   errors: any;
+  errorCreate: Error;
+ 
 }
 const Slider: FC<SliderProps> = ({
   onInputChange,
@@ -29,6 +39,8 @@ const Slider: FC<SliderProps> = ({
   onRemove,
   isValid,
   errors,
+  errorCreate,
+
 }) => {
   const pagination = {
     clickable: true,
@@ -69,13 +81,12 @@ const Slider: FC<SliderProps> = ({
     modKill,
   } = dataForm;
   // const { errors } = useFormWithValidation();
-
-  const mafiaArray = mapIdsToNames(mafia, users);
+   const mafiaArray = mapIdsToNames(mafia, users);
   const doneObj = mapIdToName(done, users);
   const sheriffObj = mapIdToName(sheriff, users);
   const peaceArray = mapIdsToNames(peace, users);
   const bpArray = mapIdsToNames(bestPlayer, users);
-   const mkArray = mapIdsToNames(modKill, users);
+  const mkArray = mapIdsToNames(modKill, users);
   let currentPlayerArray = [...mafiaArray];
   if (doneObj.name && doneObj.id) {
     currentPlayerArray.push(doneObj);
@@ -120,7 +131,7 @@ const Slider: FC<SliderProps> = ({
               <select
                 id='gmAddGame'
                 name='gameMaster'
-                className={`input ${styles.input}`}
+                className={`select ${styles.input}`}
                 placeholder='Выберите ведущего'
                 required
                 onChange={onInputChange}
@@ -159,7 +170,7 @@ const Slider: FC<SliderProps> = ({
               <select
                 id='resultAddGame'
                 name='result'
-                className={`input ${styles.input_horizontal}`}
+                className={`select ${styles.input_horizontal}`}
                 required
                 onChange={onInputChange}
                 value={result}
@@ -176,15 +187,13 @@ const Slider: FC<SliderProps> = ({
           </fieldset>
         </SwiperSlide>
         <SwiperSlide>
-          <fieldset
-            className={`fieldset ${styles.fields} ${styles.fields_players}`}
-          >
+           <fieldset className={`fieldset ${styles.fields}`}>
             <label className={`label ${styles.label}`} htmlFor='mafiaAddGame'>
               Мафия
               <select
                 id='mafiaAddGame'
                 name='mafia'
-                className={`input ${styles.input}`}
+                className={`select ${styles.input}`}
                 disabled={mafiaArray.length === 2}
                 required
                 onChange={onInputChange}
@@ -218,13 +227,50 @@ const Slider: FC<SliderProps> = ({
                 </ul>
               </div>
             </label>
-
+            <label className={`label ${styles.label}`} htmlFor='peaceAddGame'>
+              Мирные жители
+              <select
+                id='peaceAddGame'
+                name='peace'
+                className={`select ${styles.input}`}
+                required
+                onChange={onInputChange}
+                disabled={peace.length === 6}
+              >
+                <option></option>
+                {users?.map((user) => {
+                  return (
+                    <option key={user._id} value={user._id}>
+                      {user.name}
+                    </option>
+                  );
+                })}
+              </select>
+              <div className={`${styles.nicks_container}`}>
+                <p className={styles.selected}>Выбрано: {peace.length}/6</p>
+                <ul className={styles.peace_container}>
+                  {peaceArray.map((item: { id: string; name: string }) => {
+                    return (
+                      <li key={item.id} className={styles.nick}>
+                        <p className={styles.nick_text}>{item.name}</p>
+                        <button
+                          onClick={() => onRemove(item.id, 'peace')}
+                          className={styles.nick_button}
+                        ></button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </label>
+          </fieldset>
+          <fieldset className={`fieldset ${styles.fields_horizontal}`}>
             <label className={`label ${styles.label}`} htmlFor='doneAddGame'>
               Дон
               <select
                 id='doneAddGame'
                 name='done'
-                className={`input ${styles.input}`}
+                className={`select ${styles.input}`}
                 required
                 onChange={onInputChange}
                 disabled={doneObj.name}
@@ -257,7 +303,7 @@ const Slider: FC<SliderProps> = ({
               <select
                 id='sheriffAddGame'
                 name='sheriff'
-                className={`input ${styles.input}`}
+                className={`select ${styles.input}`}
                 required
                 onChange={onInputChange}
                 disabled={sheriffObj.name}
@@ -285,44 +331,8 @@ const Slider: FC<SliderProps> = ({
               </div>
               {/* <InfoTooltip error='Error' /> */}
             </label>
-
-            <label className={`label ${styles.label}`} htmlFor='peaceAddGame'>
-              Мирные жители
-              <select
-                id='peaceAddGame'
-                name='peace'
-                className={`input ${styles.input}`}
-                required
-                onChange={onInputChange}
-                disabled={peace.length === 6}
-              >
-                <option></option>
-                {users?.map((user) => {
-                  return (
-                    <option key={user._id} value={user._id}>
-                      {user.name}
-                    </option>
-                  );
-                })}
-              </select>
-              <div className={`${styles.nicks_container}`}>
-                <p className={styles.selected}>Выбрано: {peace.length}/6</p>
-                <ul className={styles.peace_container}>
-                  {peaceArray.map((item: { id: string; name: string }) => {
-                    return (
-                      <li key={item.id} className={styles.nick}>
-                        <p className={styles.nick_text}>{item.name}</p>
-                        <button
-                          onClick={() => onRemove(item.id, 'peace')}
-                          className={styles.nick_button}
-                        ></button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            </label>
           </fieldset>
+         
         </SwiperSlide>
         <SwiperSlide>
           <fieldset className={`fieldset ${styles.fields}`}>
@@ -331,7 +341,7 @@ const Slider: FC<SliderProps> = ({
               <select
                 id='bpAddGame'
                 name='bestPlayer'
-                className={`input ${styles.input}`}
+                className={`select ${styles.input}`}
                 onChange={onInputChange}
               >
                 <option></option>
@@ -345,63 +355,67 @@ const Slider: FC<SliderProps> = ({
               </select>
               <div className={`${styles.nicks_container}`}>
                 <ul className={styles.peace_container}>
-                  {bpArray.map(
-                    (item: {id: string, name: string}) => {
-                      return (
-                        <li key={item.id} className={styles.nick}>
-                          <p className={styles.nick_text}>{item.name}</p>
-                          <button
-                            onClick={() => onRemove(item.id, 'bestPlayer')}
-                            className={styles.nick_button}
-                          ></button>
-                        </li>
-                      );
-                    }
-                  )}
+                  {bpArray.map((item: { id: string; name: string }) => {
+                    return (
+                      <li key={item.id} className={styles.nick}>
+                        <p className={styles.nick_text}>{item.name}</p>
+                        <button
+                          onClick={() => onRemove(item.id, 'bestPlayer')}
+                          className={styles.nick_button}
+                        ></button>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </label>
 
             <label className={`label ${styles.label}`} htmlFor='mkAddGame'>
               МК
-               <select
-              id='mkAddGame'
-              name='modKill'
-              className={`input ${styles.input}`}
-              onChange={onInputChange}
-            >
-              <option></option>
-              {currentPlayerArray?.map((user) => {
-                return (
-                  <option key={user.id} value={user.id}>
-                    {user.name}
-                  </option>
-                );
-              })}
-            </select>
-               <div className={`${styles.nicks_container}`}>
+              <select
+                id='mkAddGame'
+                name='modKill'
+                className={`select ${styles.input}`}
+                onChange={onInputChange}
+              >
+                <option></option>
+                {currentPlayerArray?.map((user) => {
+                  return (
+                    <option key={user.id} value={user.id}>
+                      {user.name}
+                    </option>
+                  );
+                })}
+              </select>
+              <div className={`${styles.nicks_container}`}>
                 <ul className={styles.peace_container}>
-                  {mkArray.map(
-                    (item: {id: string, name: string}) => {
-                      return (
-                        <li key={item.id} className={styles.nick}>
-                          <p className={styles.nick_text}>{item.name}</p>
-                          <button
-                            onClick={() => onRemove(item.id, 'modKill')}
-                            className={styles.nick_button}
-                          ></button>
-                        </li>
-                      );
-                    }
-                  )}
+                  {mkArray.map((item: { id: string; name: string }) => {
+                    return (
+                      <li key={item.id} className={styles.nick}>
+                        <p className={styles.nick_text}>{item.name}</p>
+                        <button
+                          onClick={() => onRemove(item.id, 'modKill')}
+                          className={styles.nick_button}
+                        ></button>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             </label>
-           
-           
           </fieldset>
         </SwiperSlide>
       </Swiper>
+      <div className={styles.error}>
+       
+         {/* {
+        errorCreate && <InfoTooltip error = {`Произошла ошибка: ${errorCreate?.data?.error} . Код ошибки: ${errorCreate?.status}`}></InfoTooltip>
+       } */}
+         {/* {
+        errorCreate && <InfoTooltip error = {message}></InfoTooltip>
+       } */}
+      </div>
+
       <div className={styles.buttons}>
         <button type='button' className={`prev button ${styles.prev_button}`}>
           Назад

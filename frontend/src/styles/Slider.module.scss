@@ -18,12 +18,12 @@
   align-items: center;
   gap: 24px;
 }
-.fields_players {
-  // gap: 36px;
-}
 
-.fields_players:last-child {
-  // margin-bottom: 36px;
+.fields_players {
+  margin-top: 48px;
+}
+.input {
+  width: 100%;
 }
 
 .label {
@@ -34,9 +34,9 @@
   column-gap: 24px;
 }
 .input:disabled {
-border: 1px solid rgba(212, 213, 217, 0.70);
-background: #F4F5F7;
-color: rgba(128, 133, 142, 0.75);
+  border: 1px solid rgba(212, 213, 217, 0.7);
+  background: #f4f5f7;
+  color: rgba(128, 133, 142, 0.75);
 }
 
 .input_horizontal {
@@ -125,6 +125,11 @@ color: rgba(128, 133, 142, 0.75);
   display: flex !important;
   gap: 5px;
   align-items: center;
+}
+
+.error {
+  margin: auto;
+  padding: 10px;
 }
 .buttons {
   display: flex;
