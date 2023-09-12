@@ -137,3 +137,6 @@ export function mapIdToName(id, objects) {
   return { id, name: "" };
 }
 
+export const hasDuplicates = (arr) => {
+    return new Set(arr).size !== arr.length;
+  }

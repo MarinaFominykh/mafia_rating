@@ -7,7 +7,7 @@ import Slider from './Slider';
 import { useFormWithValidation } from '@/hooks/UseFormValidation';
 import InfoTooltip from './InfoTooltip';
 import { Error } from '@/models/Error';
-import { CONFLICT_NAME_MESSAGE, INVALID_DATA_MESSAGE } from '@/utils/constans';
+import { CONFLICT_NAME_MESSAGE, INVALID_DATA_MESSAGE} from '@/utils/constans';
 
 interface AddPlayerFormProps {
   isOpen: boolean;
@@ -38,6 +38,7 @@ const AddPlayerForm: FC<AddPlayerFormProps> = ({ isOpen, onClose }) => {
       onClose();
     }
   };
+
   useEffect(() => {
     // Добавить проверку кода ошибки
     if (isError) {
@@ -72,6 +73,8 @@ const AddPlayerForm: FC<AddPlayerFormProps> = ({ isOpen, onClose }) => {
             value={values.name || ''}
             onChange={handleChange}
             required
+            minLength={2}
+            maxLength={30}
           />
           <InfoTooltip error={errors.name} />
         </fieldset>

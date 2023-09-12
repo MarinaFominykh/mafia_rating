@@ -11,6 +11,8 @@ import { getData } from '../store/reducers/DataFormSlice';
 import { gameFormSlice } from '../store/reducers/DataFormSlice';
 import { useFormWithValidation } from '@/hooks/UseFormValidation';
 import InfoTooltip from './InfoTooltip';
+import { hasDuplicates } from '@/utils/functions';
+import { DUPLICATE_ELEMENTS } from '@/utils/constans';
 import {
   RED_RESULT,
   BLACK_RESULT,
@@ -52,6 +54,7 @@ const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
   const [createGame, { isSuccess, isError, error }] =
     gameAPI.useCreateGameMutation();
   const [message, setMessage] = useState('');
+  const [isValidComposition, setIsValidComposition] = useState(false);
 
   const dispatch = useAppDispatch();
   // const { title, gameMaster, date, result, players } = useAppSelector(
@@ -59,6 +62,18 @@ const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
   // );
   const { values, handleChange, errors, isValid, resetForm, handleRemove } =
     useFormWithValidation();
+  const {
+    title,
+    gameMaster,
+    date,
+    result,
+    done,
+    sheriff,
+    mafia,
+    peace,
+    bestPlayer,
+    modKill,
+  } = values;
 
   const showInfoToolTip = (error: string) => {
     setMessage(error);
@@ -66,18 +81,6 @@ const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    const {
-      title,
-      gameMaster,
-      date,
-      result,
-      done,
-      sheriff,
-      mafia,
-      peace,
-      bestPlayer,
-      modKill,
-    } = values;
     const newGame = {
       title,
       gameMaster,
@@ -130,16 +133,27 @@ const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
         }),
       ],
     };
+    const data = [...mafia, ...peace, sheriff, done];
     e.preventDefault();
+    if (hasDuplicates(data)) {
+      showInfoToolTip(DUPLICATE_ELEMENTS);
+      return;
+    }
     await createGame(newGame);
     if (isSuccess) {
       resetForm();
       onClose();
     }
-    if(isError) {
-      showInfoToolTip("Какая-то ошибка")
+    if (isError) {
+      showInfoToolTip('Какая-то ошибка');
     }
   };
+
+  useEffect(() => {
+    if (mafia.length === 2 && peace.length === 6) {
+      setIsValidComposition(true);
+    } else setIsValidComposition(false);
+  }, [values]);
 
   return (
     <Popup isOpen={isOpen}>
@@ -156,11 +170,14 @@ const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
           onInputChange={handleChange}
           dataForm={values}
           onRemove={handleRemove}
-          isValid={isValid}
+          isValid={isValidComposition && isValid}
           errors={errors}
           errorCreate={error as Error}
+          message={message}
         />
+        
         {isError && <InfoTooltip error={message}></InfoTooltip>}
+       
       </form>
     </Popup>
   );

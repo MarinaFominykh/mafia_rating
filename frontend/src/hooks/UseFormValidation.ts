@@ -13,20 +13,20 @@ export function useFormWithValidation() {
     peace: [],
     bestPlayer: [],
     modKill: [],
-    name: ''
+    name: '',
   });
   const [errors, setErrors] = useState({
-   
-  name: ''});
+    name: '',
+  });
   const [isValid, setIsValid] = useState(false);
 
   const handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    
     const target = event.target;
     const name = target.name;
     const value = target.value;
+    const form = target.closest('form');
     if (
       name === 'mafia' ||
       name === 'peace' ||
@@ -37,14 +37,11 @@ export function useFormWithValidation() {
     } else {
       setValues({ ...values, [name]: value });
     }
-     setErrors({
+    setErrors({
       ...errors,
       [name]: target.validationMessage,
     });
-
-    setIsValid(
-      target.closest('form') ? target.closest('form').checkValidity() : false
-    );
+    setIsValid(form ? form.checkValidity() : false);
   };
 
   const resetForm = useCallback(
@@ -60,10 +57,9 @@ export function useFormWithValidation() {
         peace: [],
         bestPlayer: [],
         modKill: [],
-        name: ''
+        name: '',
       },
       newErrors = {
-        
         name: '',
       },
       newIsValid = false
@@ -91,7 +87,7 @@ export function useFormWithValidation() {
     } else {
       setValues({ ...values, [field]: '' });
     }
-  }
+  };
 
   return {
     values,
@@ -99,6 +95,6 @@ export function useFormWithValidation() {
     errors,
     isValid,
     resetForm,
-    handleRemove
+    handleRemove,
   };
 }

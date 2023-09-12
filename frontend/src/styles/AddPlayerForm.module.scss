@@ -21,7 +21,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px; 
+  margin-bottom: 24px;
 }
 
 .close {
@@ -71,5 +71,7 @@
 }
 
 .error {
-margin: auto auto 0 auto;
+  margin: auto auto 0 auto;
+  padding: 10px;
+  height: 32px;
 }

@@ -31,6 +31,7 @@ interface SliderProps {
   isValid: boolean;
   errors: any;
   errorCreate: Error;
+  message: string;
  
 }
 const Slider: FC<SliderProps> = ({
@@ -40,6 +41,7 @@ const Slider: FC<SliderProps> = ({
   isValid,
   errors,
   errorCreate,
+  message
 
 }) => {
   const pagination = {
@@ -407,7 +409,7 @@ const Slider: FC<SliderProps> = ({
         </SwiperSlide>
       </Swiper>
       <div className={styles.error}>
-       
+       <InfoTooltip error={message} />
          {/* {
         errorCreate && <InfoTooltip error = {`Произошла ошибка: ${errorCreate?.data?.error} . Код ошибки: ${errorCreate?.status}`}></InfoTooltip>
        } */}
