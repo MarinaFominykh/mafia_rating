@@ -13,17 +13,28 @@ import {
   blackWin,
   redWin,
   totalWin,
+  blackTotal,
+  redTotal,
+  sheriffTotal,
+  sheriffWin,
+  doneTotal,
+  doneWin,
   bestPlayer,
   modKill,
   rating,
 } from '../utils/functions';
 import { gameAPI } from '../services/GameService';
+import { IDataUser } from '@/models/IDataUser';
 
 interface RatingTableProps {
   handleAddPlayer: () => void;
+  openProfile: (player: IDataUser) => void;
 }
 
-const RatingTable: FC<RatingTableProps> = ({handleAddPlayer}) => {
+const RatingTable: FC<RatingTableProps> = ({
+  handleAddPlayer,
+  openProfile,
+}) => {
   let playerArray;
   const { data: games } = gameAPI.useFetchAllGamesQuery('');
   // UserService:
@@ -62,21 +73,30 @@ const RatingTable: FC<RatingTableProps> = ({handleAddPlayer}) => {
   const { players } = useAppSelector((state) => state.playerReducer);
 
   useEffect(() => {
-    playerArray = users?.map((user) => {
-      return {
-        id: user._id,
-        name: user.name,
-        wins: totalWin(games, user),
-        games: countGames(games, user),
-        best: bestPlayer(games, user),
-        rating: rating(games, user),
-        // blackVictory: blackWin(games, user),
-        // redVictory: redWin(games, user),
-        // modKill: modKill(games, user),
-      };
-    }).sort(function (a, b) {
-      return a.rating < b.rating ? 1 : -1;
-    });
+    playerArray = users
+      ?.map((user) => {
+        return {
+          id: user._id,
+          name: user.name,
+          wins: totalWin(games, user),
+          games: countGames(games, user),
+          best: bestPlayer(games, user),
+          rating: rating(games, user),
+          blackGames: blackTotal(games, user),
+          blackWins: blackWin(games, user),
+          redGames: redTotal(games, user),
+          redWins: redWin(games, user),
+          sheriffGames: sheriffTotal(games, user),
+          sheriffWins: sheriffWin(games, user),
+          doneGames: doneTotal(games, user),
+          doneWins: doneWin(games, user),
+          mk: modKill(games, user),
+         
+        };
+      })
+      .sort(function (a, b) {
+        return a.rating < b.rating ? 1 : -1;
+      });
     if (playerArray) {
       dispatch(playerSlice.actions.usersTransform(playerArray));
     }
@@ -140,7 +160,7 @@ const RatingTable: FC<RatingTableProps> = ({handleAddPlayer}) => {
                 // user={user}
                 remove={handleRemove}
                 edit={handleEdit}
-               
+                openProfile={openProfile}
               />
             );
           })}

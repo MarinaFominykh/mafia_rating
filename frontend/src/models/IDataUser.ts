@@ -5,4 +5,15 @@ export interface IDataUser {
   games: number;
   best: number;
   rating: number;
+  blackGames?: number;
+  blackWins?: number;
+  redGames?: number;
+  redWins?: number;
+  sheriffGames?: number;
+  sheriffWins?: number;
+  doneGames?: number;
+  doneWins?: number;
+  modKill?: number;
+
+
 }

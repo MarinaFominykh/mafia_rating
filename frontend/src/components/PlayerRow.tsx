@@ -9,9 +9,10 @@ interface PlayerRowProps {
   player: IDataUser;
   remove: (user: IUser) => void;
   edit: (user: IUser) => void;
+  openProfile: (player: IDataUser) => void;
 }
 
-const PlayerRow: FC<PlayerRowProps> = ({ player, remove, edit }) => {
+const PlayerRow: FC<PlayerRowProps> = ({ player, remove, edit, openProfile }) => {
   const handleRemove = (event: React.MouseEvent) => {
     event.stopPropagation();
     remove({
@@ -25,6 +26,10 @@ const PlayerRow: FC<PlayerRowProps> = ({ player, remove, edit }) => {
     //  edit({...user, name})
     edit({ _id: player.id, name });
   };
+
+  function handleProfile() {
+    openProfile(player);
+  }
 
   return (
     // <li>
@@ -48,7 +53,7 @@ const PlayerRow: FC<PlayerRowProps> = ({ player, remove, edit }) => {
         {/* <button className="table__profile-btn" onClick={handleUpdateUnith}> */}
         <button
           className={styles.table_button}
-          // onClick={handleProfile}
+          onClick={handleProfile}
         >
           Профиль
         </button>

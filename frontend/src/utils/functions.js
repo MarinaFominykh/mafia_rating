@@ -26,6 +26,17 @@ export function countWin(games, user, role, result) {
   }).length;
 }
 
+export function countRole(games, user, role) {
+  return games?.filter((game) => {
+    return game.players.some(
+      (player) =>
+        player?.user?._id === user._id &&
+        player?.role === role
+    );
+  }).length;
+}
+
+
 export const mafiaWin = (games, user) => {
   return countWin(games, user, BLACK, BLACK_RESULT);
 };
@@ -53,6 +64,30 @@ export const redWin = (games, user) => {
 export const totalWin = (games, user) => {
   return blackWin(games, user) + redWin(games, user);
 };
+
+export const mafiaTotal = (games, user) => {
+  return countRole(games, user, BLACK)
+}
+
+export const doneTotal = (games, user) => {
+  return countRole(games, user, DONE)
+}
+
+export const blackTotal = (games, user) => {
+  return mafiaTotal(games, user) + doneTotal(games, user)
+}
+
+export const peaceTotal = (games, user) => {
+  return countRole(games, user, RED)
+}
+
+export const sheriffTotal = (games, user) => {
+  return countRole(games, user, SHERIFF)
+}
+
+export const redTotal = (games, user) => {
+  return peaceTotal(games, user) + sheriffTotal(games, user)
+}
 
 export function countProps(games, user, key) {
   return games?.filter((game) => {

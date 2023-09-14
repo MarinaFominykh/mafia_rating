@@ -8,11 +8,13 @@ import RatingTable from './RatingTable';
 import RateTable from './RateTable';
 import { filterResult } from '@/utils/functions';
 import { gameAPI } from '../services/GameService';
+import { IDataUser } from '@/models/IDataUser';
 
 interface RatingMainProps {
   handleAddPlayer: () => void;
+   openProfile: (player: IDataUser) => void;
 }
-const RatingMain: FC <RatingMainProps> = ({handleAddPlayer}) => {
+const RatingMain: FC <RatingMainProps> = ({handleAddPlayer, openProfile}) => {
    const { data: games } = gameAPI.useFetchAllGamesQuery('');
   const dispatch = useDispatch();
   // const period = useSelector((state: RootState) => state.selectPeriod.value);
@@ -54,7 +56,7 @@ const RatingMain: FC <RatingMainProps> = ({handleAddPlayer}) => {
         </p>
         <p className={styles.count_text}>Мафия</p>
       </div>
-      <RatingTable handleAddPlayer={handleAddPlayer}/>
+      <RatingTable handleAddPlayer={handleAddPlayer} openProfile={openProfile}/>
       {/* <RateTable /> */}
     </section>
   );

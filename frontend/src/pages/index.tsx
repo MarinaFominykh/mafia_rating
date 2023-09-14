@@ -6,21 +6,29 @@ import styles from '@/styles/Home.module.scss';
 import RatingMain from '@/components/RatingMain';
 import AddPlayerForm from '@/components/AddPlayerForm';
 import AddGameForm from '@/components/AddGameForm';
+import Profile from '@/components/Profile';
 import { openPopup, closePopup } from '@/utils/functions';
+import { IDataUser } from '@/models/IDataUser';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
   const [isAddPlayerPopupOpen, setIsAddPlayerPopupOpen] = useState(false);
-  
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [currentProfile, setCurrentProfile] = useState({
+    id: '',
+    name: '',
+    wins: 0,
+    games: 0,
+    best: 0,
+    rating: 0,
+  });
+ 
 
-  // function openPopup(setState: (value: boolean) => void) {
-  //   setState(true);
-  // }
-  // function closePopup() {
-  //   setIsAddPlayerPopupOpen(false);
-    
-  // }
+  function handleProfileClick(player: IDataUser) {
+    setIsProfileOpen(true);
+    setCurrentProfile(player);
+  }
   return (
     <>
       <Head>
@@ -30,9 +38,19 @@ export default function Home() {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      <RatingMain handleAddPlayer={() => openPopup(setIsAddPlayerPopupOpen)} />
-      <AddPlayerForm isOpen={isAddPlayerPopupOpen} onClose={()=> closePopup(setIsAddPlayerPopupOpen)} />
-      
+      <RatingMain
+        handleAddPlayer={() => openPopup(setIsAddPlayerPopupOpen)}
+        openProfile={handleProfileClick}
+      />
+      <AddPlayerForm
+        isOpen={isAddPlayerPopupOpen}
+        onClose={() => closePopup(setIsAddPlayerPopupOpen)}
+      />
+      <Profile
+        isOpen={isProfileOpen}
+        onClose={() => closePopup(setIsProfileOpen)}
+        player={currentProfile}
+      />
     </>
   );
 }
