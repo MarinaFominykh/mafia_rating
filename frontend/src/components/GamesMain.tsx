@@ -6,6 +6,7 @@ import { YEAR_OPTIONS } from '@/utils/constans';
 import GamesList from './GamesList';
 import {getYear} from '@/store/selectPeriodReducer';
 
+
 const GamesMain = () => {
     const dispatch = useDispatch();
     const period = useSelector((state: RootState) => state.selectYearReducer.valueGames);

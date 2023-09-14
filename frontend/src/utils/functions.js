@@ -175,3 +175,11 @@ export function mapIdToName(id, objects) {
 export const hasDuplicates = (arr) => {
     return new Set(arr).size !== arr.length;
   }
+
+export function filterGames(games, period) {
+  if (period === 'За все время') {
+    return games;
+  } else return games?.filter((game) => {
+      return game.date.includes(period);
+    });
+  }

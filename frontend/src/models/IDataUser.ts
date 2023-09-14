@@ -13,7 +13,7 @@ export interface IDataUser {
   sheriffWins?: number;
   doneGames?: number;
   doneWins?: number;
-  modKill?: number;
+  mk?: number;
 
 
 }
