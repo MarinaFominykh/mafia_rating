@@ -98,6 +98,7 @@ export function countProps(games, user, key) {
 }
 
 export const bestPlayer = (games, user) => {
+ 
   return countProps(games, user, BEST_PLAYER);
 };
 
@@ -177,9 +178,10 @@ export const hasDuplicates = (arr) => {
   }
 
 export function filterGames(games, period) {
+  // console.log('games', games)
   if (period === 'За все время') {
     return games;
   } else return games?.filter((game) => {
       return game.date.includes(period);
-    });
+    })
   }

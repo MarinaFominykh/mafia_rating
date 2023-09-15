@@ -60,7 +60,7 @@ ul {
   margin: auto;
   box-sizing: border-box;
 }
-button:focus {
+button:focus-visible {
   outline: 2px solid black;
 }
 

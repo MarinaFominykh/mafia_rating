@@ -1,6 +1,7 @@
 import React, {ChangeEvent, FC} from 'react';
 import styles from '@/styles/RatingMain.module.scss';
 import type { RootState } from  '../store';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
 import { useDispatch, useSelector } from 'react-redux';
 import { YEAR_OPTIONS } from '@/utils/constans';
 import { yearRating } from '@/store/selectPeriodReducer';
@@ -15,10 +16,10 @@ interface RatingMainProps {
    openProfile: (player: IDataUser) => void;
 }
 const RatingMain: FC <RatingMainProps> = ({handleAddPlayer, openProfile}) => {
-   const { data: games } = gameAPI.useFetchAllGamesQuery('');
-  const dispatch = useDispatch();
-  // const period = useSelector((state: RootState) => state.selectPeriod.value);
-  
+  const { data: games } = gameAPI.useFetchAllGamesQuery('');
+  const dispatch = useAppDispatch();
+  const { valueRaiting: period } = useAppSelector((state) => state.selectYearReducer);
+   
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     dispatch(yearRating(e.target.value));
   };
@@ -33,7 +34,7 @@ const RatingMain: FC <RatingMainProps> = ({handleAddPlayer, openProfile}) => {
           <select
             className={styles.select}
             name='period'
-            // value={period}
+            value={period}
             onChange={handleSelectChange}
           >
             {YEAR_OPTIONS.map((option, i) => (

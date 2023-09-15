@@ -1,6 +1,8 @@
-import React, { useEffect, FC } from 'react';
+import React, { useEffect, useState, FC } from 'react';
 import styles from '@/styles/RatingTable.module.scss';
+import type { RootState } from '../store';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { userSlice } from '@/store/reducers/UserSlice';
 import { playerSlice } from '@/store/reducers/PlayerSlice';
 import { fetchUsers } from '@/store/reducers/ActionCreators';
@@ -22,6 +24,7 @@ import {
   bestPlayer,
   modKill,
   rating,
+  filterGames
 } from '../utils/functions';
 import { gameAPI } from '../services/GameService';
 import { IDataUser } from '@/models/IDataUser';
@@ -36,8 +39,8 @@ const RatingTable: FC<RatingTableProps> = ({
   openProfile,
 }) => {
   let playerArray;
+  const dispatch = useAppDispatch();
   const { data: games } = gameAPI.useFetchAllGamesQuery('');
-  // UserService:
   const {
     data: users,
     error,
@@ -51,6 +54,9 @@ const RatingTable: FC<RatingTableProps> = ({
     { error: deleteError, isLoading: isDeleteLoading, isSuccess: isDeleteSuc },
   ] = userAPI.useDeleteUserMutation();
   const [editUser, {}] = userAPI.useEditUserMutation();
+  const { players } = useAppSelector((state) => state.playerReducer);
+  const { valueRaiting: period } = useAppSelector((state) => state.selectYearReducer);
+  const [filteredGames, setFilteredGames] = useState(games);
 
   const handleCreate = async () => {
     const name = prompt();
@@ -67,30 +73,32 @@ const RatingTable: FC<RatingTableProps> = ({
   const sortData = (field: string) => {
     console.log('sortPlayers=>', field);
   };
+   useEffect(() => {
+    setFilteredGames(games);
+  }, [games]);
 
-  // UserSlice:
-  const dispatch = useAppDispatch();
-  const { players } = useAppSelector((state) => state.playerReducer);
-
+  useEffect(() => {
+    setFilteredGames(filterGames(games, period));
+  }, [period]);
   useEffect(() => {
     playerArray = users
       ?.map((user) => {
         return {
           id: user._id,
           name: user.name,
-          wins: totalWin(games, user),
-          games: countGames(games, user),
-          best: bestPlayer(games, user),
-          rating: rating(games, user),
-          blackGames: blackTotal(games, user),
-          blackWins: blackWin(games, user),
-          redGames: redTotal(games, user),
-          redWins: redWin(games, user),
-          sheriffGames: sheriffTotal(games, user),
-          sheriffWins: sheriffWin(games, user),
-          doneGames: doneTotal(games, user),
-          doneWins: doneWin(games, user),
-          mk: modKill(games, user),
+          wins: totalWin(filteredGames, user),
+          games: countGames(filteredGames, user),
+          best: bestPlayer(filteredGames, user),
+          rating: rating(filteredGames, user),
+          blackGames: blackTotal(filteredGames, user),
+          blackWins: blackWin(filteredGames, user),
+          redGames: redTotal(filteredGames, user),
+          redWins: redWin(filteredGames, user),
+          sheriffGames: sheriffTotal(filteredGames, user),
+          sheriffWins: sheriffWin(filteredGames, user),
+          doneGames: doneTotal(filteredGames, user),
+          doneWins: doneWin(filteredGames, user),
+          mk: modKill(filteredGames, user),
          
         };
       })
@@ -100,7 +108,9 @@ const RatingTable: FC<RatingTableProps> = ({
     if (playerArray) {
       dispatch(playerSlice.actions.usersTransform(playerArray));
     }
-  }, [users, games]);
+    // console.log('playerArray', playerArray)
+  }, [users, games, period]);
+  // console.log('filterGames', filteredGames)
 
   // useEffect(() => {
   //  dispatch(playerSlice.actions.usersTransform(playerArray))
