@@ -30,8 +30,7 @@ const PlayerRow: FC<PlayerRowProps> = ({ player, remove, edit, openProfile }) =>
   function handleProfile() {
     openProfile(player);
   }
-
-  return (
+   return (
     // <li>
     //   {user.name}
     //   <button onClick={handleRemove}>Delete</button>

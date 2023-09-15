@@ -1,12 +1,9 @@
 import React, {ChangeEvent, FC} from 'react';
 import styles from '@/styles/RatingMain.module.scss';
-import type { RootState } from  '../store';
 import { useAppDispatch, useAppSelector } from '@/hooks/redux';
-import { useDispatch, useSelector } from 'react-redux';
 import { YEAR_OPTIONS } from '@/utils/constans';
 import { yearRating } from '@/store/selectPeriodReducer';
 import RatingTable from './RatingTable';
-import RateTable from './RateTable';
 import { filterResult } from '@/utils/functions';
 import { gameAPI } from '../services/GameService';
 import { IDataUser } from '@/models/IDataUser';
@@ -19,7 +16,7 @@ const RatingMain: FC <RatingMainProps> = ({handleAddPlayer, openProfile}) => {
   const { data: games } = gameAPI.useFetchAllGamesQuery('');
   const dispatch = useAppDispatch();
   const { valueRaiting: period } = useAppSelector((state) => state.selectYearReducer);
-   
+  const {filterGamesRate} = useAppSelector((state) => state.selectYearReducer) 
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     dispatch(yearRating(e.target.value));
   };
@@ -28,7 +25,7 @@ const RatingMain: FC <RatingMainProps> = ({handleAddPlayer, openProfile}) => {
       <div className={styles.head}>
         <div className={styles.title_cont}>
           <h1 className={styles.title}>Рейтинг</h1>
-          <p className={styles.amount}>Количество игр: {games?.length}</p>
+          <p className={styles.amount}>Количество игр: {filterGamesRate?.length}</p>
         </div>
         <form className={styles.select_form}>
           <select
@@ -49,11 +46,11 @@ const RatingMain: FC <RatingMainProps> = ({handleAddPlayer, openProfile}) => {
       <div className={styles.count}>
         <p className={styles.count_text}>Город</p>
         <p className={styles.count_number}>
-          {filterResult(games, "Победа города")}
+          {filterResult(filterGamesRate, "Победа города")}
         </p>
         <p className={styles.count_separator}>:</p>
         <p className={styles.count_number}>
-          {filterResult(games, "Победа мафии")}
+          {filterResult(filterGamesRate, "Победа мафии")}
         </p>
         <p className={styles.count_text}>Мафия</p>
       </div>

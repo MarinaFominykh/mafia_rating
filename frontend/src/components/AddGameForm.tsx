@@ -3,27 +3,13 @@ import styles from '@/styles/AddGameForm.module.scss';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import Popup from './Popup';
 import Slider from './Slider';
-import { useAppDispatch, useAppSelector } from '@/hooks/redux';
+import { useAppDispatch } from '@/hooks/redux';
 import { gameAPI } from '@/services/GameService';
-import { IUser } from '@/models/IUser';
-import { IGame } from '@/models/IGame';
-import { getData } from '../store/reducers/DataFormSlice';
-import { gameFormSlice } from '../store/reducers/DataFormSlice';
 import { useFormWithValidation } from '@/hooks/UseFormValidation';
 import InfoTooltip from './InfoTooltip';
 import { hasDuplicates } from '@/utils/functions';
 import { DUPLICATE_ELEMENTS } from '@/utils/constans';
-import {
-  RED_RESULT,
-  BLACK_RESULT,
-  EQUALITY_RESULT,
-  SHERIFF,
-  DONE,
-  BLACK,
-  RED,
-  BEST_PLAYER,
-  MODKILL,
-} from '@/utils/constans';
+import { SHERIFF, DONE, BLACK, RED } from '@/utils/constans';
 interface AddGameFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -56,10 +42,6 @@ const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
   const [message, setMessage] = useState('');
   const [isValidComposition, setIsValidComposition] = useState(false);
 
-  const dispatch = useAppDispatch();
-  // const { title, gameMaster, date, result, players } = useAppSelector(
-  //   (state) => state.dataFormSlice
-  // );
   const { values, handleChange, errors, isValid, resetForm, handleRemove } =
     useFormWithValidation();
   const {
@@ -175,9 +157,8 @@ const AddGameForm: FC<AddGameFormProps> = ({ isOpen, onClose }) => {
           errorCreate={error as Error}
           message={message}
         />
-        
+
         {isError && <InfoTooltip error={message}></InfoTooltip>}
-       
       </form>
     </Popup>
   );

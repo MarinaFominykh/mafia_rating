@@ -9,10 +9,44 @@ import AddGameForm from '@/components/AddGameForm';
 import Profile from '@/components/Profile';
 import { openPopup, closePopup } from '@/utils/functions';
 import { IDataUser } from '@/models/IDataUser';
+import { userAPI } from '@/services/UserService';
+import { gameAPI } from '@/services/GameService';
+import { useAppDispatch, useAppSelector } from '@/hooks/redux';
+import { playerSlice } from '@/store/reducers/PlayerSlice';
+import { selectYearSlice } from '@/store/selectPeriodReducer';
+import {
+  countGames,
+  blackWin,
+  redWin,
+  totalWin,
+  blackTotal,
+  redTotal,
+  sheriffTotal,
+  sheriffWin,
+  doneTotal,
+  doneWin,
+  bestPlayer,
+  modKill,
+  rating,
+  filterGames,
+} from '../utils/functions';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export default function Home() {
+  let playerArray;
+  const dispatch = useAppDispatch();
+  const {
+    data: users,
+    error,
+    isLoading,
+    isSuccess,
+  } = userAPI.useFetchAllUsersQuery('');
+  const { data: games } = gameAPI.useFetchAllGamesQuery('');
+  const { valueRaiting: period } = useAppSelector(
+    (state) => state.selectYearReducer
+  );
+  const {filterGamesRate} = useAppSelector((state) => state.selectYearReducer)
   const [isAddPlayerPopupOpen, setIsAddPlayerPopupOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [currentProfile, setCurrentProfile] = useState({
@@ -23,12 +57,50 @@ export default function Home() {
     best: 0,
     rating: 0,
   });
- 
 
   function handleProfileClick(player: IDataUser) {
     setIsProfileOpen(true);
     setCurrentProfile(player);
   }
+
+    useEffect(() => {
+    if (games) {
+      dispatch(selectYearSlice.actions.filterForRate(games))
+    }
+  }, [games]);
+
+  useEffect(() => {
+     dispatch(selectYearSlice.actions.filterForRate(filterGames(games, period)))
+    
+  }, [period, users, games]);
+  useEffect(() => {
+    playerArray = users
+      ?.map((user) => {
+        return {
+          id: user._id,
+          name: user.name,
+          wins: totalWin(filterGamesRate, user),
+          games: countGames(filterGamesRate, user),
+          best: bestPlayer(filterGamesRate, user),
+          rating: rating(filterGamesRate, user),
+          blackGames: blackTotal(filterGamesRate, user),
+          blackWins: blackWin(filterGamesRate, user),
+          redGames: redTotal(filterGamesRate, user),
+          redWins: redWin(filterGamesRate, user),
+          sheriffGames: sheriffTotal(filterGamesRate, user),
+          sheriffWins: sheriffWin(filterGamesRate, user),
+          doneGames: doneTotal(filterGamesRate, user),
+          doneWins: doneWin(filterGamesRate, user),
+          mk: modKill(filterGamesRate, user),
+        };
+      })
+      .sort(function (a, b) {
+        return a.rating < b.rating ? 1 : -1;
+      });
+    if (playerArray) {
+      dispatch(playerSlice.actions.usersTransform(playerArray));
+    }
+      }, [filterGamesRate, users]);
   return (
     <>
       <Head>
