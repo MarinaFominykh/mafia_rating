@@ -41,7 +41,10 @@ table tr td:first-child::before {
 ul {
   list-style: none;
 }
-
+body {
+overflow: hidden;
+scrollbar-gutter: stable;
+}
 .body {
   background: #f9f9fa;
   font-family: $font-family;
@@ -49,6 +52,7 @@ ul {
   -webkit-font-smoothing: antialiased;
   margin: auto;
   color: #2e3555;
+
 }
 #__next {
   position: relative;

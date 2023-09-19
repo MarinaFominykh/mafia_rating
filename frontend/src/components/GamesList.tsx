@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from '../store';
 import styles from '@/styles/GamesList.module.scss';
@@ -8,7 +8,10 @@ import { gameAPI } from '../services/GameService';
 import GameItem from './GameItem';
 import { IGame } from '@/models/IGame';
 import { filterGames } from '@/utils/functions';
-const GamesList = () => {
+interface GamesListProps {
+   openDetail: (game: IGame) => void;
+}
+const GamesList: FC<GamesListProps> = ({openDetail}) => {
   const {
     data: games,
     error,
@@ -45,7 +48,7 @@ const GamesList = () => {
       </div>
       <section className={styles.games}>
         {filteredGames?.map((game) => (
-          <GameItem key={game._id} game={game} />
+          <GameItem key={game._id} game={game} openDetail={openDetail}/>
         ))}
       
       </section>

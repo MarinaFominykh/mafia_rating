@@ -5,8 +5,12 @@ import moment from 'moment';
 import { RED_RESULT, BLACK_RESULT } from '@/utils/constans';
 interface GameItemProps {
   game: IGame;
+  openDetail: (game: IGame) => void;
 }
-const GameItem: FC<GameItemProps> = ({ game }) => {
+const GameItem: FC<GameItemProps> = ({ game, openDetail }) => {
+  function handleDetail() {
+   openDetail(game);
+  }
   return (
     <article className={styles.game}>
       <div
@@ -45,7 +49,7 @@ const GameItem: FC<GameItemProps> = ({ game }) => {
           </div>
         </div>
         <button
-          // onClick={handleDetail}
+          onClick={handleDetail}
           type='button'
           className={styles.more_btn}
         >

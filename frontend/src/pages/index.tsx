@@ -5,7 +5,7 @@ import { Inter } from 'next/font/google';
 import styles from '@/styles/Home.module.scss';
 import RatingMain from '@/components/RatingMain';
 import AddPlayerForm from '@/components/AddPlayerForm';
-import AddGameForm from '@/components/AddGameForm';
+import EditPlayerForm from '@/components/EditPlayerForm';
 import Profile from '@/components/Profile';
 import { openPopup, closePopup } from '@/utils/functions';
 import { IDataUser } from '@/models/IDataUser';
@@ -48,19 +48,18 @@ export default function Home() {
   );
   const {filterGamesRate} = useAppSelector((state) => state.selectYearReducer)
   const [isAddPlayerPopupOpen, setIsAddPlayerPopupOpen] = useState(false);
+  const [isEditPlayerPopupOpen, setIsEditPlayerPopupOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [currentProfile, setCurrentProfile] = useState({
-    id: '',
-    name: '',
-    wins: 0,
-    games: 0,
-    best: 0,
-    rating: 0,
-  });
+  const [currentProfile, setCurrentProfile] = useState({});
 
   function handleProfileClick(player: IDataUser) {
     setIsProfileOpen(true);
     setCurrentProfile(player);
+  }
+
+    function handleUpdateName() {
+    setIsEditPlayerPopupOpen(true);
+   
   }
 
     useEffect(() => {
@@ -114,14 +113,17 @@ export default function Home() {
         handleAddPlayer={() => openPopup(setIsAddPlayerPopupOpen)}
         openProfile={handleProfileClick}
       />
-      <AddPlayerForm
-        isOpen={isAddPlayerPopupOpen}
-        onClose={() => closePopup(setIsAddPlayerPopupOpen)}
-      />
+              
       <Profile
         isOpen={isProfileOpen}
         onClose={() => closePopup(setIsProfileOpen)}
         player={currentProfile}
+        handleUpdateName = {handleUpdateName}
+      />
+       <EditPlayerForm player={currentProfile} isOpen={isEditPlayerPopupOpen} onClose={() => closePopup(setIsEditPlayerPopupOpen)}/>
+       <AddPlayerForm
+        isOpen={isAddPlayerPopupOpen}
+        onClose={() => closePopup(setIsAddPlayerPopupOpen)}
       />
     </>
   );

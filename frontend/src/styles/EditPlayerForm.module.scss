@@ -1,0 +1,87 @@
+@import './mixin.scss';
+.form {
+  min-width: 490px;
+  min-height: 100vh;
+  height: auto;
+  background: #ffffff;
+  padding: 32px 32px 62px 32px;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+ 
+}
+
+.fieldset {
+  border: none;
+}
+
+.title_wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.close {
+  width: 24px;
+  height: 24px;
+  background: transparent url(../images/icons/close.svg);
+  // position: absolute;
+  // top: 28px;
+  // right: 24px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: 0.5s;
+  object-fit: contain;
+  object-position: center;
+}
+
+.close:hover {
+  opacity: 0.6;
+}
+
+.submit {
+  @include regularText;
+  font-size: 16px;
+  line-height: 20px;
+  border-radius: 8px;
+  padding: 10px 16px;
+  border: none;
+  cursor: pointer;
+  transition: 0.5s;
+  background: #118dff;
+  color: #ffffff;
+  width: fit-content;
+}
+
+.submit:hover {
+  @include hover;
+}
+
+.submit:disabled {
+  background-color: rgb(180, 191, 191);
+  cursor: default;
+}
+
+.submit:disabled:hover {
+  opacity: 1;
+}
+
+.error {
+  margin: auto auto 0 auto;
+  padding: 10px;
+  height: 32px;
+  max-width: 398px;
+}
+
+@media screen and (max-width: 540px) {
+  .form {
+    min-width: 288px;
+    padding: 16px 16px 62px 16px;
+  }
+}

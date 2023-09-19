@@ -1,13 +1,17 @@
-import React, {useState, ChangeEvent} from 'react';
+import React, {useState, ChangeEvent, FC} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState } from  '../store';
 import styles from '@/styles/GamesMain.module.scss';
 import { YEAR_OPTIONS } from '@/utils/constans';
 import GamesList from './GamesList';
 import {getYear} from '@/store/selectPeriodReducer';
+import { IGame } from '@/models/IGame';
 
+interface GamesMainProps {
+  openDetail: (game: IGame) => void;
+}
 
-const GamesMain = () => {
+const GamesMain: FC<GamesMainProps> = ({openDetail}) => {
     const dispatch = useDispatch();
     const period = useSelector((state: RootState) => state.selectYearReducer.valueGames);
  
@@ -34,7 +38,7 @@ const GamesMain = () => {
           </select>
         </form>
       </div>
-      <GamesList />
+      <GamesList openDetail={openDetail} />
     </>
   );
 };

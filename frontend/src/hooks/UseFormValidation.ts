@@ -14,9 +14,11 @@ export function useFormWithValidation() {
     bestPlayer: [],
     modKill: [],
     name: '',
+    editName: ''
   });
   const [errors, setErrors] = useState({
     name: '',
+    editName: '',
   });
   const [isValid, setIsValid] = useState(false);
 
@@ -58,9 +60,11 @@ export function useFormWithValidation() {
         bestPlayer: [],
         modKill: [],
         name: '',
+        editName: ''
       },
       newErrors = {
         name: '',
+        editName: '',
       },
       newIsValid = false
     ) => {

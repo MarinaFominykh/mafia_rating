@@ -1,0 +1,233 @@
+@import './mixin.scss';
+.card {
+  min-width: 477px;
+  min-height: 100vh;
+  height: auto;
+  background: #ffffff;
+  padding: 32px 32px 62px 32px;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.title {
+  @include semiBoldText;
+  font-size: 24px;
+  line-height: 32px;
+  color: #2e3555;
+  margin: 0 0 8px 0;
+}
+.close {
+  padding: 0;
+  border: none;
+  width: 24px;
+  height: 24px;
+  background-image: url(../images/icons/close.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+  transition: 0.5s;
+  cursor: pointer;
+}
+.close:hover {
+  @include hover;
+}
+.result {
+  @include mediumText;
+  font-size: 14px;
+  line-height: 16px;
+  color: #ffffff;
+  padding: 4px 8px;
+  text-align: center;
+  background: #118dff;
+  border-radius: 4px;
+  width: fit-content;
+  margin: 0 0 24px 0;
+}
+
+.result_container {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 24px 0;
+}
+
+.result_item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(2, 54, 103, 0.08);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.result_text_cntr {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.result_text {
+  margin: 0;
+}
+.result_name {
+  @include semiBoldText;
+  font-size: 16px;
+  line-height: 16px;
+  color: #2e3555;
+}
+.result_description {
+  @include mediumText;
+  font-size: 12px;
+  line-height: 14px;
+  color: #525760;
+}
+.users_head {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+.users_title {
+  @include semiBoldText;
+  font-size: 18px;
+  line-height: 20px;
+  color: #2e3555;
+  margin: 0;
+}
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin: auto 0 20px 0;
+}
+.close_btn {
+  border: 0;
+  cursor: pointer;
+  transition: 0.5s;
+  @include regularText;
+  font-size: 16px;
+  line-height: 40px;
+  color: #118dff;
+  background: #ebefff;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+.close_btn:hover {
+  @include hover;
+}
+.edit_btn {
+  padding: 0 16px;
+  border: 0;
+  cursor: pointer;
+  transition: 0.5s;
+  @include regularText;
+  font-size: 16px;
+  line-height: 40px;
+  color: #ffffff;
+  background: #118dff;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+.edit_btn:hover {
+  @include hover;
+}
+
+.users_wrapper {
+  margin: 0 0 24px;
+}
+
+.list {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0;
+}
+
+.users_item {
+  border-bottom: 1px solid #ebedf0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  // justify-content: space-between;
+  min-height: 56px;
+  padding: 8px 10px;
+  transition: 0.5s;
+}
+.name_cntr {
+  display: flex;
+  gap: 4px;
+}
+.name {
+  @include semiBoldText;
+  font-size: 16px;
+  line-height: 16px;
+  color: #2e3555;
+  margin: 0 0 6px 0;
+}
+.role {
+  @include mediumText;
+  font-size: 12px;
+  line-height: 14px;
+  color: #525760;
+  margin: 0;
+}
+.best {
+  width: 24px;
+  height: 24px;
+  background-image: url(../images/icons/bi_check.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.mk {
+  width: 24px;
+  height: 24px;
+  background-image: url(../images/icons/red_cross.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #EBEFF3;
+  border-radius: 5px;
+}
+
+.tooltip::after {
+  background: #fff;
+  border-radius: 8px 8px 8px 0px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+  color: #000000;
+  content: attr(data-tooltip);
+  margin-top: -30px;
+  left: 50px;
+  opacity: 0;
+  padding: 3px 7px;
+  position: absolute;
+  visibility: hidden;
+  transition: all 0.4s ease-in-out;
+}
+
+.tooltip:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media screen and (max-width: 769px) {
+  .card {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 540px) {
+  .card {
+    min-width: 288px;
+    width: 100%;
+    padding: 16px 16px 62px 16px;
+  }
+  .users_wrapper {
+    margin-bottom: 16px;
+  }
+}

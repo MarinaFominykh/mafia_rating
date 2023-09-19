@@ -8,9 +8,10 @@ import { IDataUser } from '@/models/IDataUser';
 interface ProfileProps {
   isOpen: boolean;
   onClose: () => void;
-  player: IDataUser;
+  player: IDataUser | {};
+  handleUpdateName: () => void;
 }
-const Profile: FC<ProfileProps> = ({ isOpen, onClose, player }) => {
+const Profile: FC<ProfileProps> = ({ isOpen, onClose, player, handleUpdateName }) => {
   // const profiles = dataProfile.map((profile) => {
   //   return {...profile, blackGames: player.blackGames, redGames: player.redGames}
   // })
@@ -37,14 +38,14 @@ const Profile: FC<ProfileProps> = ({ isOpen, onClose, player }) => {
             />
             <div className={styles.text_container}>
               <p className={styles.rating}>Рейтинг raiting</p>
-              <p className={styles.name}>{player.name}</p>
+              <p className={styles.name}>{('name' in player) ? player.name : ''}</p>
             </div>
           </div>
           <ul className={styles.data}>
             <li className={styles.item}>
               <div className={styles.wrapper}>
                 <p className={styles.description}>Количество игр</p>
-                <p className={styles.number}>{player.games}</p>
+                <p className={styles.number}>{('games' in player) ? player.games : ''}</p>
               </div>
               <Image
                 src={`/images/icons/profile_amount.svg`}
@@ -57,7 +58,7 @@ const Profile: FC<ProfileProps> = ({ isOpen, onClose, player }) => {
               <div className={styles.wrapper}>
                 <p className={styles.description}>Мафия (сыграно/побед)</p>
                 <p className={styles.number}>
-                  {player.blackGames}/{player.blackWins}
+                 {('blackGames' in player) ? player.blackGames : ''}/{('blackWins' in player) ? player.blackWins : ''}
                 </p>
               </div>
               <Image
@@ -71,7 +72,7 @@ const Profile: FC<ProfileProps> = ({ isOpen, onClose, player }) => {
               <div className={styles.wrapper}>
                 <p className={styles.description}>Мирный (сыграно/побед)</p>
                 <p className={styles.number}>
-                  {player.redGames}/{player.redWins}
+                  {('redGames' in player) ? player.redGames : ''}/{('redWins' in player) ? player.redWins : ''}
                 </p>
               </div>
               <Image
@@ -85,7 +86,7 @@ const Profile: FC<ProfileProps> = ({ isOpen, onClose, player }) => {
               <div className={styles.wrapper}>
                 <p className={styles.description}>Шериф (сыграно/побед)</p>
                 <p className={styles.number}>
-                  {player.sheriffGames}/{player.sheriffWins}
+                 {('sheriffGames' in player) ? player.sheriffGames : ''}/{('sheriffWins' in player) ? player.sheriffWins : ''}
                 </p>
               </div>
               <Image
@@ -99,7 +100,7 @@ const Profile: FC<ProfileProps> = ({ isOpen, onClose, player }) => {
               <div className={styles.wrapper}>
                 <p className={styles.description}>Дон (сыграно/побед)</p>
                 <p className={styles.number}>
-                  {player.doneGames}/{player.doneWins}
+                  {('doneGames' in player) ? player.doneGames : ''}/{('doneWins' in player) ? player.doneWins : ''}
                 </p>
               </div>
               <Image
@@ -131,19 +132,19 @@ const Profile: FC<ProfileProps> = ({ isOpen, onClose, player }) => {
                 className={`${styles.text_container} ${styles.progress_item}`}
               >
                 <p className={styles.description}>ModKill</p>
-                <p className={styles.number}>{player.mk}</p>
+                <p className={styles.number}>{('mk' in player) ? player.mk : ''}</p>
               </div>
               <div
                 className={`${styles.text_container} ${styles.progress_item}`}
               >
                 <p className={styles.description}>Лучший игрок</p>
-                <p className={styles.number}>{player.best}</p>
+                <p className={styles.number}>{('best' in player) ? player.best : ''}</p>
               </div>
             </li>
           </ul>
           {/* <InfoTooltip message={message} /> */}
           <button
-            // onClick={handleUpdateName}
+            onClick={handleUpdateName}
             type='button'
             className={styles.setting}
           >
